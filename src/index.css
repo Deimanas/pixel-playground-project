@@ -1,96 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Minecraft-inspired Gaming Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Minecraft Color Palette */
+    --background: 220 20% 10%;
+    --foreground: 45 30% 90%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 220 15% 15%;
+    --card-foreground: 45 30% 90%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 220 15% 12%;
+    --popover-foreground: 45 30% 90%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Grass Green - Primary */
+    --primary: 100 50% 40%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Dirt Brown - Secondary */
+    --secondary: 30 50% 30%;
+    --secondary-foreground: 45 30% 90%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Stone Gray - Muted */
+    --muted: 220 10% 25%;
+    --muted-foreground: 220 10% 60%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Gold/Experience - Accent */
+    --accent: 45 100% 50%;
+    --accent-foreground: 220 20% 10%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Lava Red - Destructive */
+    --destructive: 15 90% 50%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 15% 25%;
+    --input: 220 15% 20%;
+    --ring: 100 50% 40%;
 
-    --radius: 0.5rem;
+    --radius: 0px;
 
-    --sidebar-background: 0 0% 98%;
+    /* Custom Minecraft Colors */
+    --grass: 100 55% 35%;
+    --dirt: 25 45% 25%;
+    --stone: 220 5% 45%;
+    --obsidian: 270 20% 12%;
+    --diamond: 185 70% 50%;
+    --gold: 45 100% 50%;
+    --redstone: 0 80% 45%;
+    --emerald: 140 70% 40%;
+    --lapis: 220 70% 45%;
+    --netherite: 20 15% 20%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Minecraft Sky Gradient */
+    --sky-top: 200 80% 60%;
+    --sky-bottom: 200 60% 80%;
 
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-background: 220 15% 12%;
+    --sidebar-foreground: 45 30% 90%;
+    --sidebar-primary: 100 50% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 45 100% 50%;
+    --sidebar-accent-foreground: 220 20% 10%;
+    --sidebar-border: 220 15% 25%;
+    --sidebar-ring: 100 50% 40%;
   }
 }
 
@@ -101,5 +78,221 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'VT323', monospace;
+    image-rendering: pixelated;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Press Start 2P', cursive;
+  }
+}
+
+@layer components {
+  /* Minecraft Block Style */
+  .minecraft-block {
+    @apply relative;
+    box-shadow: 
+      inset 4px 4px 0 rgba(255,255,255,0.2),
+      inset -4px -4px 0 rgba(0,0,0,0.3),
+      4px 4px 0 rgba(0,0,0,0.5);
+  }
+
+  /* Pixel Border */
+  .pixel-border {
+    @apply relative;
+    box-shadow: 
+      0 4px 0 0 hsl(var(--border)),
+      0 -4px 0 0 hsl(var(--border)),
+      4px 0 0 0 hsl(var(--border)),
+      -4px 0 0 0 hsl(var(--border));
+  }
+
+  /* Grass Block Effect */
+  .grass-block {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--grass)) 0%,
+      hsl(var(--grass)) 30%,
+      hsl(var(--dirt)) 30%,
+      hsl(var(--dirt)) 100%
+    );
+  }
+
+  /* Pixel Button */
+  .pixel-btn {
+    @apply relative font-pixel uppercase tracking-wider;
+    box-shadow: 
+      inset -4px -4px 0 rgba(0,0,0,0.3),
+      inset 4px 4px 0 rgba(255,255,255,0.15),
+      0 4px 0 0 rgba(0,0,0,0.5);
+    transition: all 0.1s ease;
+  }
+
+  .pixel-btn:hover {
+    transform: translateY(2px);
+    box-shadow: 
+      inset -4px -4px 0 rgba(0,0,0,0.3),
+      inset 4px 4px 0 rgba(255,255,255,0.15),
+      0 2px 0 0 rgba(0,0,0,0.5);
+  }
+
+  .pixel-btn:active {
+    transform: translateY(4px);
+    box-shadow: 
+      inset -4px -4px 0 rgba(0,0,0,0.3),
+      inset 4px 4px 0 rgba(255,255,255,0.15);
+  }
+
+  /* Inventory Slot */
+  .inventory-slot {
+    @apply bg-muted border-2 p-2;
+    border-color: hsl(var(--border));
+    box-shadow: 
+      inset 2px 2px 0 rgba(0,0,0,0.5),
+      inset -2px -2px 0 rgba(255,255,255,0.1);
+  }
+
+  /* Hotbar Style */
+  .hotbar {
+    @apply flex gap-1 p-2 bg-muted/80 backdrop-blur;
+    box-shadow: 
+      inset 0 0 0 2px hsl(var(--border)),
+      0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  /* Creeper Pattern */
+  .creeper-pattern {
+    background-image: 
+      linear-gradient(45deg, hsl(var(--grass)) 25%, transparent 25%),
+      linear-gradient(-45deg, hsl(var(--grass)) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, hsl(var(--grass)) 75%),
+      linear-gradient(-45deg, transparent 75%, hsl(var(--grass)) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  }
+
+  /* Stone Texture */
+  .stone-texture {
+    background: 
+      radial-gradient(circle at 20% 30%, hsl(var(--stone)) 2px, transparent 2px),
+      radial-gradient(circle at 80% 70%, hsl(var(--stone)) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, hsl(var(--muted)) 3px, transparent 3px),
+      hsl(var(--card));
+    background-size: 30px 30px;
+  }
+
+  /* XP Bar */
+  .xp-bar {
+    @apply h-4 rounded-none overflow-hidden;
+    background: hsl(var(--muted));
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .xp-bar-fill {
+    @apply h-full transition-all duration-500;
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--emerald)) 0%,
+      hsl(140 60% 30%) 100%
+    );
+  }
+
+  /* Floating Animation */
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Glowing Text */
+  .glow-text {
+    text-shadow: 
+      0 0 10px hsl(var(--accent)),
+      0 0 20px hsl(var(--accent)),
+      0 0 30px hsl(var(--accent));
+  }
+
+  /* Enchantment Shimmer */
+  .enchant-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .enchant-shimmer::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      to bottom right,
+      transparent 40%,
+      rgba(138, 43, 226, 0.3) 50%,
+      transparent 60%
+    );
+    animation: shimmer 3s linear infinite;
+  }
+}
+
+@layer utilities {
+  .font-pixel {
+    font-family: 'Press Start 2P', cursive;
+  }
+
+  .font-minecraft {
+    font-family: 'VT323', monospace;
+  }
+
+  .text-shadow-minecraft {
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+  }
+}
+
+/* Keyframe Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+@keyframes pixelate-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes block-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.05);
+  }
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
   }
 }
