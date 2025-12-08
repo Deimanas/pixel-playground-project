@@ -1,29 +1,70 @@
 import { motion } from "framer-motion";
-import { Sword, Calendar, Trophy, ExternalLink } from "lucide-react";
+import { Sword, Trophy, Star, Sparkles, Crown, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRef } from "react";
 
 const historyEvents = [
   {
-    date: "2020-03-20",
-    title: "Pirmasis serverio renginys",
-    description: 'Klasikinis „Minecraft" minižaidimas – „Hunger Games", kurį organizavo žaidėjas Adikas. Pergalę pirmajame serverio istorijos renginyje iškovojo Dariuscxz.',
-    icon: Trophy,
+    year: "2019",
+    title: "Pradžia",
+    description: "Serverio idėjos gimimas ir pirmieji žingsniai",
+    icon: Sparkles,
+    color: "bg-emerald",
   },
   {
-    date: "2020-04-17",
-    title: "Trečiasis Argo serverio renginys",
-    description: "Balance Game organizuotas Paulito. Tai reakcijos ir strategijos žaidimas, kuriame geriausiai šiomis savybėmis pasižymėjo Ekgame.",
+    year: "2020",
+    title: "Pirmasis eventas",
+    description: "Hunger Games renginys, kurį laimėjo Dariuscxz",
+    icon: Trophy,
+    color: "bg-gold",
+  },
+  {
+    year: "2020",
+    title: "Nuotykių žemė",
+    description: "Startuoja populiariausias serverio projektas",
+    icon: Star,
+    color: "bg-diamond",
+  },
+  {
+    year: "2021",
+    title: "Vienuolynas",
+    description: "Atidarytas Vienuolyno projektas su nauja patirtimi",
+    icon: Crown,
+    color: "bg-gold",
+  },
+  {
+    year: "2022",
+    title: "Mod-pack'ai",
+    description: "Pridėti mod-pack'ai, kurie pagyvino serverio patirtį",
     icon: Sword,
+    color: "bg-redstone",
   },
   {
-    date: "2020-04-27",
-    title: "Antrasis serverio renginys",
-    description: '„Golden Banner" žaidimas – komandinis renginys, sukurtas remiantis „Capture the Flag" ir „King of the Hill" žaidimų idėjomis.',
-    icon: Trophy,
+    year: "2023",
+    title: "Bendruomenės augimas",
+    description: "Pasiekėme 500+ žaidėjų bendruomenę",
+    icon: Star,
+    color: "bg-emerald",
+  },
+  {
+    year: "2024",
+    title: "Nauji horizontai",
+    description: "Serveris tęsia savo kelionę su naujomis galimybėmis",
+    icon: Sparkles,
+    color: "bg-diamond",
+  },
+  {
+    year: "2025",
+    title: "Šiandien",
+    description: "Tęsiame kurti nuostabius nuotykius kartu",
+    icon: Crown,
+    color: "bg-gold",
   },
 ];
 
 export const History = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   return (
     <section className="py-24 bg-card relative overflow-hidden" id="istorija">
       {/* Stone Texture Background */}
@@ -42,55 +83,78 @@ export const History = () => {
             <span className="font-minecraft text-gold text-lg">ISTORIJA</span>
           </div>
           <h2 className="font-pixel text-2xl md:text-3xl lg:text-4xl text-foreground mb-4 text-shadow-minecraft">
-            ARGO <span className="text-gold">ISTORIJA</span>
+            ARGO <span className="text-gold">PRIEŠISTORĖ</span>
           </h2>
           <p className="font-minecraft text-xl text-muted-foreground max-w-3xl mx-auto">
-            Per metus serverio esmė keitėsi daugybę kartų – nuo Hardcore režimo iki rolių žaidimo. 
-            Siekiant paįvairinti žaidimą, buvo pridėti mod-pack'ai, kurie pagyvino serverio patirtį.
+            Per metus serverio esmė keitėsi daugybę kartų – nuo Hardcore režimo iki rolių žaidimo.
           </p>
         </motion.div>
 
-        {/* Timeline */}
-        <div className="max-w-4xl mx-auto">
-          <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-border transform md:-translate-x-1/2" />
-
-            {historyEvents.map((event, index) => (
-              <motion.div
-                key={index}
-                className={`relative flex items-center mb-12 ${
-                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                }`}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-              >
-                {/* Timeline Dot */}
-                <div className="absolute left-4 md:left-1/2 w-8 h-8 bg-gold minecraft-block transform md:-translate-x-1/2 flex items-center justify-center z-10">
-                  <event.icon className="w-4 h-4 text-accent-foreground" />
-                </div>
-
-                {/* Content */}
-                <div className={`ml-16 md:ml-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-12" : "md:pl-12"}`}>
-                  <div className="bg-background border-4 border-border p-6 minecraft-block hover:border-gold/50 transition-colors">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Calendar className="w-4 h-4 text-gold" />
-                      <span className="font-minecraft text-gold text-lg">{event.date}</span>
+        {/* Horizontal Timeline */}
+        <div className="relative">
+          {/* Timeline Container with horizontal scroll */}
+          <div 
+            ref={scrollRef}
+            className="overflow-x-auto pb-8 scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            <div className="flex gap-6 min-w-max px-4">
+              {historyEvents.map((event, index) => (
+                <motion.div
+                  key={index}
+                  className="relative flex flex-col items-center"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  {/* Card */}
+                  <div className="w-56 bg-background border-4 border-border p-5 minecraft-block hover:border-gold/50 transition-colors group">
+                    {/* Year Badge */}
+                    <div className={`inline-flex items-center gap-2 px-3 py-1 ${event.color}/20 border-2 ${event.color === 'bg-emerald' ? 'border-emerald' : event.color === 'bg-gold' ? 'border-gold' : event.color === 'bg-diamond' ? 'border-diamond' : 'border-redstone'} mb-4`}>
+                      <span className={`font-pixel text-xs ${event.color === 'bg-emerald' ? 'text-emerald' : event.color === 'bg-gold' ? 'text-gold' : event.color === 'bg-diamond' ? 'text-diamond' : 'text-redstone'}`}>
+                        {event.year}
+                      </span>
                     </div>
-                    <h3 className="font-pixel text-sm text-foreground mb-3">{event.title}</h3>
-                    <p className="font-minecraft text-lg text-muted-foreground">{event.description}</p>
+                    
+                    {/* Icon */}
+                    <div className={`w-12 h-12 ${event.color} minecraft-block flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                      <event.icon className="w-6 h-6 text-accent-foreground" />
+                    </div>
+                    
+                    {/* Content */}
+                    <h3 className="font-pixel text-xs text-foreground mb-2">{event.title}</h3>
+                    <p className="font-minecraft text-base text-muted-foreground leading-relaxed">
+                      {event.description}
+                    </p>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+
+                  {/* Timeline Connector */}
+                  {index < historyEvents.length - 1 && (
+                    <div className="absolute top-1/2 -right-3 w-6 h-1 bg-border transform -translate-y-1/2" />
+                  )}
+                  
+                  {/* Timeline Dot */}
+                  <div className={`mt-6 w-4 h-4 ${event.color} minecraft-block`} />
+                </motion.div>
+              ))}
+            </div>
+            
+            {/* Timeline Base Line */}
+            <div className="absolute bottom-12 left-0 right-0 h-1 bg-border" />
+          </div>
+
+          {/* Scroll Indicators */}
+          <div className="flex justify-center gap-4 mt-4">
+            <p className="font-minecraft text-muted-foreground text-sm">
+              ← Slinkite horizontaliai →
+            </p>
           </div>
         </div>
 
         {/* More Button */}
         <motion.div
-          className="text-center mt-8"
+          className="text-center mt-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

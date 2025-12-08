@@ -43,17 +43,6 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Server Status Badge */}
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald/20 border-2 border-emerald mb-8"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.3, type: "spring" }}
-          >
-            <span className="w-3 h-3 bg-emerald animate-pulse" />
-            <span className="font-minecraft text-emerald text-lg">SERVERIS AKTYVUS</span>
-          </motion.div>
-
           {/* Main Title */}
           <h1 className="font-pixel text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 text-shadow-minecraft leading-relaxed">
             ĮSITRAUK Į MŪSŲ
@@ -67,17 +56,6 @@ export const Hero = () => {
             Draugiška ir aktyvi atmosfera skatina bendradarbiavimą, 
             o pagalba visada šalia – tiek naujokams, tiek patyrusiems žaidėjams.
           </p>
-
-          {/* Server IP */}
-          <motion.div
-            className="inline-block mb-10"
-            whileHover={{ scale: 1.02 }}
-          >
-            <div className="bg-card border-4 border-border px-8 py-4 minecraft-block">
-              <p className="font-minecraft text-muted-foreground text-sm mb-1">SERVERIO IP</p>
-              <p className="font-pixel text-gold text-xl md:text-2xl glow-text">play.argashub.lt</p>
-            </div>
-          </motion.div>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

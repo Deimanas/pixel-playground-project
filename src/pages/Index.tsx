@@ -5,6 +5,7 @@ import { Gallery } from "@/components/Gallery";
 import { History } from "@/components/History";
 import { Videos } from "@/components/Videos";
 import { Discord } from "@/components/Discord";
+import { ApplicationForm } from "@/components/ApplicationForm";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
@@ -18,6 +19,7 @@ const Index = () => {
         <History />
         <Videos />
         <Discord />
+        <ApplicationForm />
       </main>
       <Footer />
     </div>
