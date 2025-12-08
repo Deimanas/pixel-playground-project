@@ -49,16 +49,22 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Server Info */}
+          {/* Social Links */}
           <div>
-            <h4 className="font-pixel text-xs text-foreground mb-4">SERVERIS</h4>
+            <h4 className="font-pixel text-xs text-foreground mb-4">BENDRUOMENĖ</h4>
             <div className="bg-card border-4 border-border p-4 minecraft-block">
-              <p className="font-minecraft text-muted-foreground mb-2">Serverio IP</p>
-              <p className="font-pixel text-gold text-lg glow-text mb-4">play.argashub.lt</p>
-              <div className="flex items-center gap-2">
+              <p className="font-minecraft text-muted-foreground mb-4">
+                Prisijunk prie mūsų Discord serverio ir tapk bendruomenės dalimi!
+              </p>
+              <a
+                href="https://discord.gg/argashub"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 font-minecraft text-lg text-emerald hover:text-gold transition-colors"
+              >
                 <span className="w-3 h-3 bg-emerald animate-pulse" />
-                <span className="font-minecraft text-emerald">Online</span>
-              </div>
+                Discord Serveris
+              </a>
             </div>
           </div>
         </div>

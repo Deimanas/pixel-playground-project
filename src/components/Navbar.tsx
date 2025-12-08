@@ -9,6 +9,7 @@ const navItems = [
   { name: "Vaizdo įrašai", href: "#videos", icon: Video },
   { name: "Renginiai", href: "#events", icon: Calendar },
   { name: "Žemėlapis", href: "#map", icon: Map },
+  { name: "Anketa", href: "#anketa", icon: Users },
 ];
 
 export const Navbar = () => {
@@ -49,13 +50,6 @@ export const Navbar = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:block">
-            <Button variant="emerald" size="default">
-              <Users className="w-5 h-5" />
-              Prisijungti
-            </Button>
-          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -87,12 +81,6 @@ export const Navbar = () => {
                     {item.name}
                   </a>
                 ))}
-                <div className="px-4 pt-4">
-                  <Button variant="emerald" size="lg" className="w-full">
-                    <Users className="w-5 h-5" />
-                    Prisijungti
-                  </Button>
-                </div>
               </div>
             </motion.div>
           )}
