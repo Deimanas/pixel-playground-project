@@ -1,109 +1,184 @@
 import { motion } from "framer-motion";
-import { Heart, ExternalLink } from "lucide-react";
+import { Youtube, MessageSquare, Camera, BookOpen, ExternalLink } from "lucide-react";
 
-const footerLinks = [
-  { name: "Discord", href: "https://discord.gg/argashub" },
-  { name: "YouTube", href: "https://www.youtube.com/@ArgoYT" },
-  { name: "Istorija", href: "https://argashub.lt/istorija" },
-  { name: "Galerija", href: "https://argashub.lt/galerija" },
-  { name: "Žemėlapis", href: "#map" },
+const socialLinks = [
+  { 
+    name: "Discord", 
+    href: "https://discord.gg/argashub", 
+    icon: MessageSquare,
+    color: "hover:bg-lapis hover:border-lapis",
+    description: "Prisijunk prie diskusijų"
+  },
+  { 
+    name: "YouTube", 
+    href: "https://www.youtube.com/@ArgoYT", 
+    icon: Youtube,
+    color: "hover:bg-redstone hover:border-redstone",
+    description: "70+ video įrašų"
+  },
+  { 
+    name: "Galerija", 
+    href: "https://argashub.lt/galerija", 
+    icon: Camera,
+    color: "hover:bg-diamond hover:border-diamond",
+    description: "Serverio akimirkos"
+  },
+  { 
+    name: "Istorija", 
+    href: "https://argashub.lt/istorija", 
+    icon: BookOpen,
+    color: "hover:bg-gold hover:border-gold",
+    description: "Argo priešistorė"
+  },
 ];
 
 export const Footer = () => {
   return (
-    <footer className="bg-obsidian border-t-4 border-border py-12">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8 mb-8">
-          {/* Logo & Description */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-grass flex items-center justify-center minecraft-block">
-                <span className="font-pixel text-primary-foreground text-lg">A</span>
+    <footer className="bg-obsidian relative overflow-hidden">
+      {/* Animated Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 20px,
+            hsl(var(--border)) 20px,
+            hsl(var(--border)) 21px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 20px,
+            hsl(var(--border)) 20px,
+            hsl(var(--border)) 21px
+          )`
+        }} />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Main Footer Content */}
+        <div className="py-16">
+          {/* Logo Section */}
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <motion.div 
+              className="inline-flex items-center gap-4 mb-4"
+              whileHover={{ scale: 1.05 }}
+            >
+              <div className="w-16 h-16 bg-grass flex items-center justify-center minecraft-block relative group">
+                <span className="font-pixel text-primary-foreground text-2xl">A</span>
+                <motion.div 
+                  className="absolute inset-0 bg-emerald/50 minecraft-block"
+                  animate={{ opacity: [0, 0.5, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
               </div>
-              <span className="font-pixel text-foreground text-sm">
-                ARGAS<span className="text-emerald">HUB</span>
-              </span>
-            </div>
-            <p className="font-minecraft text-lg text-muted-foreground">
+              <div>
+                <span className="font-pixel text-foreground text-lg block">
+                  ARGAS<span className="text-emerald">HUB</span>
+                </span>
+                <span className="font-minecraft text-muted-foreground text-sm">
+                  Nuo 2020 m.
+                </span>
+              </div>
+            </motion.div>
+            <p className="font-minecraft text-lg text-muted-foreground max-w-md mx-auto">
               Lietuviškas Minecraft serveris, kuriame kiekvienas žaidėjas randa savo vietą.
             </p>
-          </div>
+          </motion.div>
 
-          {/* Links */}
-          <div>
-            <h4 className="font-pixel text-xs text-foreground mb-4">NUORODOS</h4>
-            <ul className="space-y-2">
-              {footerLinks.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="font-minecraft text-lg text-muted-foreground hover:text-emerald transition-colors flex items-center gap-2"
-                  >
-                    {link.name}
-                    {link.href.startsWith("http") && <ExternalLink className="w-4 h-4" />}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Social Links */}
-          <div>
-            <h4 className="font-pixel text-xs text-foreground mb-4">BENDRUOMENĖ</h4>
-            <div className="bg-card border-4 border-border p-4 minecraft-block">
-              <p className="font-minecraft text-muted-foreground mb-4">
-                Prisijunk prie mūsų Discord serverio ir tapk bendruomenės dalimi!
-              </p>
-              <a
-                href="https://discord.gg/argashub"
+          {/* Social Links Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-12">
+            {socialLinks.map((link, index) => (
+              <motion.a
+                key={link.name}
+                href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-minecraft text-lg text-emerald hover:text-gold transition-colors"
+                className={`group bg-card border-4 border-border p-6 minecraft-block text-center transition-all duration-300 ${link.color}`}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <span className="w-3 h-3 bg-emerald animate-pulse" />
-                Discord Serveris
-              </a>
-            </div>
+                <motion.div
+                  className="w-12 h-12 bg-background/50 border-2 border-border mx-auto mb-3 flex items-center justify-center minecraft-block group-hover:bg-background/80 transition-colors"
+                  whileHover={{ rotate: [0, -10, 10, 0] }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <link.icon className="w-6 h-6 text-muted-foreground group-hover:text-foreground transition-colors" />
+                </motion.div>
+                <h4 className="font-pixel text-xs text-foreground mb-1 flex items-center justify-center gap-1">
+                  {link.name}
+                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </h4>
+                <p className="font-minecraft text-sm text-muted-foreground">
+                  {link.description}
+                </p>
+              </motion.a>
+            ))}
+          </div>
+
+          {/* Decorative Minecraft Blocks */}
+          <div className="flex justify-center gap-2 mb-8">
+            {['bg-grass', 'bg-dirt', 'bg-stone', 'bg-diamond', 'bg-gold', 'bg-redstone', 'bg-emerald', 'bg-lapis'].map((color, i) => (
+              <motion.div
+                key={i}
+                className={`w-4 h-4 ${color} minecraft-block`}
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                whileHover={{ scale: 1.3, rotate: 45 }}
+              />
+            ))}
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t-4 border-border pt-8">
+        <div className="border-t-4 border-border py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="font-minecraft text-muted-foreground text-center md:text-left">
+            <motion.p 
+              className="font-minecraft text-muted-foreground text-center md:text-left"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
               © 2020-2025 ArgasHub. Visos teisės saugomos.
-            </p>
-            <motion.p
-              className="font-minecraft text-muted-foreground flex items-center gap-2"
+            </motion.p>
+            
+            {/* Creeper Face Easter Egg */}
+            <motion.div
+              className="flex items-center gap-3 cursor-pointer group"
               whileHover={{ scale: 1.05 }}
             >
-              Sukurta su <Heart className="w-4 h-4 text-redstone fill-redstone" /> Lietuvoje
-            </motion.p>
+              <span className="font-minecraft text-muted-foreground group-hover:text-emerald transition-colors">
+                Sukurta Lietuvoje
+              </span>
+              <div className="grid grid-cols-4 gap-px w-8 h-8 opacity-50 group-hover:opacity-100 transition-opacity">
+                {/* Creeper face pattern */}
+                {[
+                  0, 1, 1, 0,
+                  1, 1, 1, 1,
+                  0, 1, 1, 0,
+                  1, 0, 0, 1,
+                ].map((filled, i) => (
+                  <motion.div
+                    key={i}
+                    className={`w-2 h-2 ${filled ? "bg-grass" : "bg-emerald"}`}
+                    whileHover={{ scale: 1.2 }}
+                  />
+                ))}
+              </div>
+            </motion.div>
           </div>
         </div>
-
-        {/* Creeper Face Easter Egg */}
-        <motion.div
-          className="mt-8 flex justify-center opacity-20 hover:opacity-100 transition-opacity cursor-pointer"
-          whileHover={{ scale: 1.1 }}
-        >
-          <div className="grid grid-cols-4 gap-0.5 w-16 h-16">
-            {/* Creeper face pattern */}
-            {[
-              0, 1, 1, 0,
-              1, 1, 1, 1,
-              0, 1, 1, 0,
-              1, 0, 0, 1,
-            ].map((filled, i) => (
-              <div
-                key={i}
-                className={`w-4 h-4 ${filled ? "bg-grass" : "bg-emerald"}`}
-              />
-            ))}
-          </div>
-        </motion.div>
       </div>
     </footer>
   );

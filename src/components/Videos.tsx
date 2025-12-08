@@ -52,10 +52,6 @@ export const Videos = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-redstone/20 border-2 border-redstone mb-6">
-            <Video className="w-5 h-5 text-redstone" />
-            <span className="font-minecraft text-redstone text-lg">70+ VIDEO</span>
-          </div>
           <h2 className="font-pixel text-2xl md:text-3xl lg:text-4xl text-foreground mb-4 text-shadow-minecraft">
             VAIZDO <span className="text-redstone">ĮRAŠAI</span>
           </h2>

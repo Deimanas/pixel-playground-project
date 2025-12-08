@@ -40,10 +40,6 @@ export const Gallery = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-diamond/20 border-2 border-diamond mb-6">
-            <Camera className="w-5 h-5 text-diamond" />
-            <span className="font-minecraft text-diamond text-lg">GALERIJA</span>
-          </div>
           <h2 className="font-pixel text-2xl md:text-3xl lg:text-4xl text-foreground mb-4 text-shadow-minecraft">
             SERVERIO <span className="text-diamond">AKIMIRKOS</span>
           </h2>

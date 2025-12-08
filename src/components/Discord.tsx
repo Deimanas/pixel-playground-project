@@ -26,10 +26,6 @@ export const Discord = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-lapis/20 border-2 border-lapis mb-6">
-              <MessageSquare className="w-5 h-5 text-lapis" />
-              <span className="font-minecraft text-lapis text-lg">DISCORD</span>
-            </div>
             <h2 className="font-pixel text-2xl md:text-3xl lg:text-4xl text-foreground mb-6 text-shadow-minecraft leading-relaxed">
               PRISIJUNK PRIE <span className="text-lapis">DISKUSIJŲ</span>
             </h2>
