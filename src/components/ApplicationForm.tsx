@@ -96,10 +96,6 @@ export const ApplicationForm = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald/20 border-2 border-emerald mb-6">
-            <FileText className="w-5 h-5 text-emerald" />
-            <span className="font-minecraft text-emerald text-lg">ANKETA</span>
-          </div>
           <h2 className="font-pixel text-2xl md:text-3xl lg:text-4xl text-foreground mb-4 text-shadow-minecraft">
             ANKETA Į <span className="text-emerald">SERVERĮ</span>
           </h2>

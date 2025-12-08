@@ -94,18 +94,39 @@ export const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - Modern Minecraft Style */}
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
       >
-        <div className="w-8 h-12 border-4 border-muted-foreground flex items-start justify-center p-1">
+        <motion.span 
+          className="font-minecraft text-sm text-muted-foreground"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          Slinkite žemyn
+        </motion.span>
+        <div className="relative">
+          {/* Pickaxe-style scroll indicator */}
           <motion.div
-            className="w-2 h-3 bg-emerald"
-            animate={{ y: [0, 16, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
+            className="flex flex-col items-center"
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            {/* Arrow made of blocks */}
+            <div className="w-2 h-2 bg-emerald rotate-45 mb-1" />
+            <div className="flex gap-0.5">
+              <div className="w-2 h-2 bg-emerald/70 rotate-45" />
+              <div className="w-2 h-2 bg-emerald/70 rotate-45" />
+            </div>
+            <div className="flex gap-0.5 mt-0.5">
+              <div className="w-2 h-2 bg-emerald/40 rotate-45" />
+              <div className="w-2 h-2 bg-emerald/40 rotate-45" />
+              <div className="w-2 h-2 bg-emerald/40 rotate-45" />
+            </div>
+          </motion.div>
         </div>
       </motion.div>
     </section>
