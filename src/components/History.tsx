@@ -1,5 +1,5 @@
 import { motion, PanInfo } from "framer-motion";
-import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 
@@ -128,29 +128,8 @@ export const History = () => {
 
         {/* Interactive Timeline */}
         <div className="relative" ref={containerRef}>
-          {/* Navigation Arrows */}
-          <motion.button
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-background/80 backdrop-blur-sm border-4 border-border flex items-center justify-center minecraft-block hover:border-gold transition-colors disabled:opacity-30"
-            onClick={() => goToIndex(activeIndex - 1)}
-            disabled={activeIndex === 0}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <ChevronLeft className="w-6 h-6 text-foreground" />
-          </motion.button>
-          
-          <motion.button
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-background/80 backdrop-blur-sm border-4 border-border flex items-center justify-center minecraft-block hover:border-gold transition-colors disabled:opacity-30"
-            onClick={() => goToIndex(activeIndex + 1)}
-            disabled={activeIndex === historyEvents.length - 1}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <ChevronRight className="w-6 h-6 text-foreground" />
-          </motion.button>
-
           {/* Cards Container */}
-          <div className="overflow-hidden mx-4 md:mx-16 py-8">
+          <div className="overflow-hidden py-8">
             <motion.div
               className="flex gap-6 cursor-grab active:cursor-grabbing"
               drag="x"
