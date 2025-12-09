@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Pickaxe, Users, Gamepad2 } from "lucide-react";
+import { Users, Gamepad2 } from "lucide-react";
 import heroBg from "@/assets/hero-bg.png";
+import { AnimatedCounter } from "./AnimatedCounter";
 
 export const Hero = () => {
   return (
@@ -81,16 +82,9 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-          {[
-            { value: "230+", label: "Žaidėjų" },
-            { value: "7+", label: "Metų" },
-            { value: "70+", label: "Video" },
-          ].map((stat, index) => (
-            <div key={index} className="text-center">
-              <p className="font-pixel text-2xl md:text-3xl text-gold glow-text">{stat.value}</p>
-              <p className="font-minecraft text-lg text-muted-foreground">{stat.label}</p>
-            </div>
-          ))}
+          <AnimatedCounter value="230+" label="Žaidėjų" />
+          <AnimatedCounter value="7+" label="Metų" />
+          <AnimatedCounter value="70+" label="Video" />
         </motion.div>
       </div>
 
