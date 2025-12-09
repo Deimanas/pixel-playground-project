@@ -26,7 +26,7 @@ export const AnimatedCounter = ({ value, label }: AnimatedCounterProps) => {
 
   return (
     <div ref={ref} className="text-center">
-      <div className="font-pixel text-2xl md:text-3xl text-gold glow-text flex items-center justify-center">
+      <div className="font-pixel text-2xl md:text-3xl text-gold flex items-center justify-center">
         {digits.map((digit, index) => {
           const isFirstDigit = index === 0;
           
