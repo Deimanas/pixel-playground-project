@@ -110,7 +110,7 @@ export const History = () => {
       {/* Stone Texture Background */}
       <div className="absolute inset-0 stone-texture opacity-30" />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="relative z-10">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
@@ -119,7 +119,7 @@ export const History = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="font-pixel text-2xl md:text-3xl lg:text-4xl text-foreground mb-4 text-shadow-minecraft">
-            ARGO <span className="text-gold">PRIEŠISTORĖ</span>
+            ARGO <span className="text-gold">ISTORIJA</span>
           </h2>
           <p className="font-minecraft text-xl text-muted-foreground max-w-3xl mx-auto">
             Per metus serverio esmė keitėsi daugybę kartų – nuo Hardcore režimo iki rolių žaidimo.
@@ -150,7 +150,7 @@ export const History = () => {
           </motion.button>
 
           {/* Cards Container */}
-          <div className="overflow-hidden mx-16 py-8">
+          <div className="overflow-hidden mx-4 md:mx-16 py-8">
             <motion.div
               className="flex gap-6 cursor-grab active:cursor-grabbing"
               drag="x"
@@ -229,7 +229,7 @@ export const History = () => {
           </div>
 
           {/* Timeline Progress Bar */}
-          <div className="relative h-1 bg-border mx-16 mt-4">
+          <div className="relative h-1 bg-border mx-4 md:mx-16 mt-4">
             <motion.div
               className="absolute h-full bg-gold"
               initial={{ width: 0 }}
