@@ -81,8 +81,8 @@ export const ApplicationForm = () => {
     setIsSubmitting(false);
   };
 
-  const selectClass = "w-full bg-background border-4 border-border p-3 font-minecraft text-lg text-foreground minecraft-block focus:border-emerald outline-none";
-  const inputClass = "bg-background border-4 border-border font-minecraft text-lg minecraft-block focus:border-emerald";
+  const selectClass = "w-full h-12 bg-background border-2 border-border px-3 font-minecraft text-lg text-foreground minecraft-block focus:border-emerald outline-none";
+  const inputClass = "bg-background border-2 border-border font-minecraft text-lg minecraft-block focus:border-emerald h-12";
 
   return (
     <section className="py-24 bg-background relative overflow-hidden" id="anketa">

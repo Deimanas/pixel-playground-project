@@ -1,5 +1,5 @@
-import { motion, useMotionValue, useTransform, useSpring, PanInfo } from "framer-motion";
-import { Sword, Trophy, Star, Sparkles, Crown, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, PanInfo } from "framer-motion";
+import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 
@@ -8,56 +8,56 @@ const historyEvents = [
     year: "2019",
     title: "Pradžia",
     description: "Serverio idėjos gimimas ir pirmieji žingsniai",
-    icon: Sparkles,
+    image: "https://mc-heads.net/body/MHF_Steve/128",
     color: "emerald",
   },
   {
     year: "2020",
     title: "Pirmasis eventas",
     description: "Hunger Games renginys, kurį laimėjo Dariuscxz",
-    icon: Trophy,
+    image: "https://mc-heads.net/body/MHF_Herobrine/128",
     color: "gold",
   },
   {
     year: "2020",
     title: "Nuotykių žemė",
     description: "Startuoja populiariausias serverio projektas",
-    icon: Star,
+    image: "https://mc-heads.net/body/MHF_Alex/128",
     color: "diamond",
   },
   {
     year: "2021",
     title: "Vienuolynas",
     description: "Atidarytas Vienuolyno projektas su nauja patirtimi",
-    icon: Crown,
+    image: "https://mc-heads.net/body/MHF_Villager/128",
     color: "gold",
   },
   {
     year: "2022",
     title: "Mod-pack'ai",
     description: "Pridėti mod-pack'ai, kurie pagyvino serverio patirtį",
-    icon: Sword,
+    image: "https://mc-heads.net/body/MHF_Enderman/128",
     color: "redstone",
   },
   {
     year: "2023",
     title: "Bendruomenės augimas",
     description: "Pasiekėme 500+ žaidėjų bendruomenę",
-    icon: Star,
+    image: "https://mc-heads.net/body/MHF_Creeper/128",
     color: "emerald",
   },
   {
     year: "2024",
     title: "Nauji horizontai",
     description: "Serveris tęsia savo kelionę su naujomis galimybėmis",
-    icon: Sparkles,
+    image: "https://mc-heads.net/body/MHF_Pig/128",
     color: "diamond",
   },
   {
     year: "2025",
     title: "Šiandien",
     description: "Tęsiame kurti nuostabius nuotykius kartu",
-    icon: Crown,
+    image: "https://mc-heads.net/body/MHF_Skeleton/128",
     color: "gold",
   },
 ];
@@ -73,8 +73,6 @@ export const History = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const x = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 300, damping: 30 });
 
   const cardWidth = 280;
   const gap = 24;
@@ -193,16 +191,20 @@ export const History = () => {
                         </span>
                       </motion.div>
                       
-                      {/* Icon */}
+                      {/* Image */}
                       <motion.div 
-                        className={`w-14 h-14 ${colors.bg} minecraft-block flex items-center justify-center mb-4`}
+                        className={`w-16 h-24 mb-4 overflow-hidden`}
                         animate={{ 
-                          rotate: isActive ? [0, 5, -5, 0] : 0,
-                          scale: isActive ? [1, 1.1, 1] : 1 
+                          scale: isActive ? [1, 1.05, 1] : 1 
                         }}
                         transition={{ duration: 0.6, repeat: isActive ? Infinity : 0, repeatDelay: 3 }}
                       >
-                        <event.icon className="w-7 h-7 text-accent-foreground" />
+                        <img 
+                          src={event.image} 
+                          alt={event.title}
+                          className="w-full h-full object-contain pixelated"
+                          style={{ imageRendering: 'pixelated' }}
+                        />
                       </motion.div>
                       
                       {/* Content */}
