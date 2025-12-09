@@ -82,8 +82,8 @@ export const Hero = () => {
           transition={{ delay: 0.5, duration: 0.8 }}
         >
           {[
-            { value: "500+", label: "Žaidėjų" },
-            { value: "5+", label: "Metų" },
+            { value: "230+", label: "Žaidėjų" },
+            { value: "7+", label: "Metų" },
             { value: "70+", label: "Video" },
           ].map((stat, index) => (
             <div key={index} className="text-center">
@@ -94,9 +94,9 @@ export const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator - Modern Minecraft Style */}
+      {/* Scroll Indicator - Minecraft Sword Style */}
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-3"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
@@ -108,26 +108,32 @@ export const Hero = () => {
         >
           Slinkite žemyn
         </motion.span>
-        <div className="relative">
-          {/* Pickaxe-style scroll indicator */}
-          <motion.div
-            className="flex flex-col items-center"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            {/* Arrow made of blocks */}
-            <div className="w-2 h-2 bg-emerald rotate-45 mb-1" />
-            <div className="flex gap-0.5">
-              <div className="w-2 h-2 bg-emerald/70 rotate-45" />
-              <div className="w-2 h-2 bg-emerald/70 rotate-45" />
-            </div>
-            <div className="flex gap-0.5 mt-0.5">
-              <div className="w-2 h-2 bg-emerald/40 rotate-45" />
-              <div className="w-2 h-2 bg-emerald/40 rotate-45" />
-              <div className="w-2 h-2 bg-emerald/40 rotate-45" />
-            </div>
-          </motion.div>
-        </div>
+        <motion.div
+          className="relative"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          {/* Minecraft Sword pointing down */}
+          <svg width="24" height="48" viewBox="0 0 24 48" className="drop-shadow-lg">
+            {/* Blade */}
+            <rect x="10" y="0" width="4" height="4" fill="hsl(var(--diamond))" />
+            <rect x="10" y="4" width="4" height="4" fill="hsl(var(--diamond))" />
+            <rect x="10" y="8" width="4" height="4" fill="hsl(var(--emerald))" />
+            <rect x="10" y="12" width="4" height="4" fill="hsl(var(--emerald))" />
+            <rect x="10" y="16" width="4" height="4" fill="hsl(var(--emerald))" />
+            {/* Guard */}
+            <rect x="4" y="20" width="4" height="4" fill="hsl(var(--gold))" />
+            <rect x="10" y="20" width="4" height="4" fill="hsl(var(--gold))" />
+            <rect x="16" y="20" width="4" height="4" fill="hsl(var(--gold))" />
+            {/* Handle */}
+            <rect x="10" y="24" width="4" height="4" fill="#8B4513" />
+            <rect x="10" y="28" width="4" height="4" fill="#654321" />
+            {/* Tip glow */}
+            <rect x="10" y="0" width="4" height="4" fill="hsl(var(--diamond))" opacity="0.8">
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite" />
+            </rect>
+          </svg>
+        </motion.div>
       </motion.div>
     </section>
   );
