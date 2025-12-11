@@ -19,7 +19,7 @@ const Index = () => {
       <div className={`min-h-screen bg-background ${isLoading ? 'overflow-hidden' : ''}`}>
         <Navbar />
         <main>
-          <Hero />
+          <Hero startCounters={!isLoading} />
           <Gallery />
           <History />
           <Events />

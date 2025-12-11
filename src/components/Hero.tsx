@@ -4,7 +4,11 @@ import { Users, Gamepad2 } from "lucide-react";
 import heroBg from "@/assets/hero-bg.png";
 import { AnimatedCounter } from "./AnimatedCounter";
 
-export const Hero = () => {
+interface HeroProps {
+  startCounters?: boolean;
+}
+
+export const Hero = ({ startCounters = true }: HeroProps) => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background Image */}
@@ -82,9 +86,9 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-          <AnimatedCounter value="230+" label="Žaidėjų" />
-          <AnimatedCounter value="7+" label="Metų" />
-          <AnimatedCounter value="70+" label="Video" />
+          <AnimatedCounter value="230+" label="Žaidėjų" startAnimation={startCounters} />
+          <AnimatedCounter value="7+" label="Metų" startAnimation={startCounters} />
+          <AnimatedCounter value="70+" label="Video" startAnimation={startCounters} />
         </motion.div>
       </div>
 

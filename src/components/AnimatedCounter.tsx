@@ -4,9 +4,10 @@ import { useRef, useEffect, useState } from "react";
 interface AnimatedCounterProps {
   value: string;
   label: string;
+  startAnimation?: boolean;
 }
 
-export const AnimatedCounter = ({ value, label }: AnimatedCounterProps) => {
+export const AnimatedCounter = ({ value, label, startAnimation = true }: AnimatedCounterProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -19,10 +20,10 @@ export const AnimatedCounter = ({ value, label }: AnimatedCounterProps) => {
   const digits = targetNumber.toString().split("");
 
   useEffect(() => {
-    if (isInView && !hasAnimated) {
+    if (isInView && startAnimation && !hasAnimated) {
       setHasAnimated(true);
     }
-  }, [isInView, hasAnimated]);
+  }, [isInView, startAnimation, hasAnimated]);
 
   return (
     <div ref={ref} className="text-center">
