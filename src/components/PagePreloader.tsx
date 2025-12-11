@@ -1,63 +1,99 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
-const blocks = [
-  { color: "#5D8731", delay: 0 },    // Grass
-  { color: "#8B5A2B", delay: 0.05 }, // Dirt
-  { color: "#7F7F7F", delay: 0.1 },  // Stone
-  { color: "#3D3D3D", delay: 0.15 }, // Coal
-  { color: "#5DECF5", delay: 0.2 },  // Diamond
-  { color: "#FFD700", delay: 0.25 }, // Gold
-  { color: "#50C878", delay: 0.3 },  // Emerald
-  { color: "#C41E3A", delay: 0.35 }, // Redstone
+// Minecraft TNT explosion particles - small square blocks flying outward
+const explosionParticles = [
+  { color: "#FFD700", size: 8 },  // Gold/fire
+  { color: "#FF6B00", size: 6 },  // Orange
+  { color: "#FF4500", size: 10 }, // Red-orange
+  { color: "#FFFFFF", size: 4 },  // White flash
+  { color: "#8B5A2B", size: 8 },  // Brown debris
+  { color: "#5D8731", size: 6 },  // Green
+  { color: "#3D3D3D", size: 8 },  // Dark gray
+  { color: "#7F7F7F", size: 6 },  // Gray
 ];
 
-interface BlockParticleProps {
+interface ExplosionParticleProps {
   color: string;
+  size: number;
+  angle: number;
+  distance: number;
   delay: number;
-  index: number;
 }
 
-const BlockParticle = ({ color, delay, index }: BlockParticleProps) => {
-  const angle = (index / blocks.length) * Math.PI * 2;
-  const distance = 150 + Math.random() * 100;
+const ExplosionParticle = ({ color, size, angle, distance, delay }: ExplosionParticleProps) => {
   const x = Math.cos(angle) * distance;
   const y = Math.sin(angle) * distance;
   const rotation = Math.random() * 720 - 360;
+  const gravity = distance * 0.5;
 
   return (
     <motion.div
-      className="absolute w-6 h-6 md:w-8 md:h-8"
+      className="absolute"
       style={{
+        width: size,
+        height: size,
         backgroundColor: color,
-        boxShadow: `inset -2px -2px 0 rgba(0,0,0,0.3), inset 2px 2px 0 rgba(255,255,255,0.2)`,
+        left: '50%',
+        top: '50%',
+        marginLeft: -size / 2,
+        marginTop: -size / 2,
       }}
       initial={{ x: 0, y: 0, scale: 1, rotate: 0, opacity: 1 }}
       animate={{
-        x: x,
-        y: y,
-        scale: 0,
-        rotate: rotation,
-        opacity: 0,
+        x: [0, x * 0.3, x],
+        y: [0, y * 0.3 - 20, y + gravity],
+        scale: [1, 1.2, 0],
+        rotate: [0, rotation / 2, rotation],
+        opacity: [1, 1, 0],
       }}
       transition={{
-        duration: 0.8,
-        delay: delay + 0.5,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        duration: 0.5,
+        delay: delay,
+        ease: "easeOut",
+        times: [0, 0.3, 1],
       }}
     />
   );
 };
 
+// Smoke puff component
+const SmokePuff = ({ delay, x, y }: { delay: number; x: number; y: number }) => (
+  <motion.div
+    className="absolute rounded-full"
+    style={{
+      width: 40,
+      height: 40,
+      background: 'radial-gradient(circle, rgba(128,128,128,0.8) 0%, rgba(64,64,64,0.4) 50%, transparent 70%)',
+      left: '50%',
+      top: '50%',
+      marginLeft: -20,
+      marginTop: -20,
+    }}
+    initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
+    animate={{
+      x: x,
+      y: y - 30,
+      scale: [0, 2, 3],
+      opacity: [0, 0.8, 0],
+    }}
+    transition={{
+      duration: 0.8,
+      delay: delay,
+      ease: "easeOut",
+    }}
+  />
+);
+
 export const PagePreloader = ({ onComplete }: { onComplete: () => void }) => {
   const [phase, setPhase] = useState<"loading" | "exploding" | "done">("loading");
 
   useEffect(() => {
-    const loadTimer = setTimeout(() => setPhase("exploding"), 800);
+    const loadTimer = setTimeout(() => setPhase("exploding"), 600);
     const completeTimer = setTimeout(() => {
       setPhase("done");
       onComplete();
-    }, 2000);
+    }, 1800);
 
     return () => {
       clearTimeout(loadTimer);
@@ -65,151 +101,156 @@ export const PagePreloader = ({ onComplete }: { onComplete: () => void }) => {
     };
   }, [onComplete]);
 
+  // Generate explosion particles
+  const particles: ExplosionParticleProps[] = [];
+  for (let i = 0; i < 48; i++) {
+    const angle = (i / 48) * Math.PI * 2 + Math.random() * 0.3;
+    const distance = 60 + Math.random() * 140;
+    const particleType = explosionParticles[i % explosionParticles.length];
+    particles.push({
+      color: particleType.color,
+      size: particleType.size + Math.random() * 4,
+      angle,
+      distance,
+      delay: Math.random() * 0.1,
+    });
+  }
+
   return (
     <AnimatePresence>
       {phase !== "done" && (
         <motion.div
-          className="fixed inset-0 z-[100] bg-background flex items-center justify-center"
+          className="fixed inset-0 z-[100] bg-background flex items-center justify-center overflow-hidden"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
         >
-          {/* Background Grid Pattern */}
+          {/* Dark vignette */}
           <div 
-            className="absolute inset-0 opacity-10"
+            className="absolute inset-0"
             style={{
-              backgroundImage: `
-                linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
-                linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)
-              `,
-              backgroundSize: '32px 32px'
+              background: 'radial-gradient(circle at center, transparent 0%, hsl(var(--background)) 70%)',
             }}
           />
 
-          {/* Central Block */}
           <div className="relative">
+            {/* TNT Block before explosion */}
             {phase === "loading" && (
               <motion.div
                 className="relative"
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.5, ease: "backOut" }}
+                initial={{ scale: 0, rotate: -45 }}
+                animate={{ 
+                  scale: [0, 1.1, 1],
+                  rotate: [-45, 5, 0],
+                }}
+                transition={{ duration: 0.4, ease: "backOut" }}
               >
-                {/* Main Block */}
+                {/* TNT Block */}
                 <motion.div
-                  className="w-20 h-20 md:w-28 md:h-28 relative"
+                  className="w-20 h-20 md:w-24 md:h-24 relative"
                   animate={{ 
-                    rotateY: [0, 360],
-                    rotateX: [0, 15, 0, -15, 0]
+                    scale: [1, 1.05, 1],
                   }}
                   transition={{ 
-                    rotateY: { duration: 2, repeat: Infinity, ease: "linear" },
-                    rotateX: { duration: 1, repeat: Infinity }
+                    duration: 0.15,
+                    repeat: 4,
                   }}
-                  style={{ transformStyle: "preserve-3d" }}
                 >
-                  {/* Block faces */}
+                  {/* Red TNT base */}
                   <div 
-                    className="absolute inset-0 bg-grass"
+                    className="absolute inset-0 bg-redstone"
                     style={{
                       boxShadow: `
-                        inset -4px -4px 0 rgba(0,0,0,0.3), 
-                        inset 4px 4px 0 rgba(255,255,255,0.2),
-                        0 0 40px rgba(93, 135, 49, 0.5)
+                        inset 4px 4px 0 rgba(255,255,255,0.3), 
+                        inset -4px -4px 0 rgba(0,0,0,0.4),
+                        0 0 30px rgba(255,0,0,0.5)
                       `,
                     }}
                   />
-                  {/* Pixel detail */}
-                  <div className="absolute inset-2 grid grid-cols-3 grid-rows-3 gap-1">
-                    {[...Array(9)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="bg-white/20"
-                        animate={{ opacity: [0.1, 0.3, 0.1] }}
-                        transition={{ 
-                          duration: 0.5, 
-                          delay: i * 0.1, 
-                          repeat: Infinity 
-                        }}
-                      />
-                    ))}
+                  {/* TNT label */}
+                  <div className="absolute inset-2 flex items-center justify-center">
+                    <span className="font-pixel text-xs md:text-sm text-white text-shadow-minecraft">
+                      TNT
+                    </span>
                   </div>
+                  {/* Fuse spark */}
+                  <motion.div
+                    className="absolute -top-2 left-1/2 -ml-1 w-2 h-2 bg-gold rounded-full"
+                    animate={{ 
+                      scale: [1, 1.5, 1],
+                      opacity: [1, 0.5, 1],
+                      boxShadow: [
+                        '0 0 8px #FFD700, 0 0 16px #FF6B00',
+                        '0 0 16px #FFD700, 0 0 32px #FF6B00',
+                        '0 0 8px #FFD700, 0 0 16px #FF6B00',
+                      ]
+                    }}
+                    transition={{ duration: 0.1, repeat: Infinity }}
+                  />
                 </motion.div>
-
-                {/* Loading Text */}
-                <motion.p
-                  className="font-pixel text-sm md:text-base text-emerald text-center mt-6"
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  LOADING...
-                </motion.p>
               </motion.div>
             )}
 
-            {/* Explosion Particles */}
+            {/* Explosion Phase */}
             {phase === "exploding" && (
               <>
-                {/* Center flash */}
+                {/* Initial white flash */}
                 <motion.div
-                  className="absolute w-32 h-32 md:w-48 md:h-48 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 rounded-full"
-                  style={{ backgroundColor: "#FFD700" }}
+                  className="absolute w-40 h-40 md:w-56 md:h-56 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+                  style={{ backgroundColor: "#FFFFFF" }}
                   initial={{ scale: 0, opacity: 1 }}
-                  animate={{ scale: 3, opacity: 0 }}
-                  transition={{ duration: 0.5 }}
+                  animate={{ scale: 4, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
                 />
 
-                {/* Block particles */}
-                {blocks.map((block, i) => (
-                  <BlockParticle
-                    key={i}
-                    color={block.color}
-                    delay={block.delay}
-                    index={i}
-                  />
+                {/* Orange/yellow explosion core */}
+                <motion.div
+                  className="absolute w-32 h-32 md:w-44 md:h-44 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+                  style={{ 
+                    background: 'radial-gradient(circle, #FFD700 0%, #FF6B00 40%, #FF4500 70%, transparent 100%)'
+                  }}
+                  initial={{ scale: 0, opacity: 1 }}
+                  animate={{ scale: [0, 2.5, 3], opacity: [1, 0.8, 0] }}
+                  transition={{ duration: 0.4 }}
+                />
+
+                {/* Secondary explosion ring */}
+                <motion.div
+                  className="absolute w-24 h-24 md:w-32 md:h-32 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 rounded-full border-4"
+                  style={{ borderColor: "#FF6B00" }}
+                  initial={{ scale: 0, opacity: 1 }}
+                  animate={{ scale: 5, opacity: 0 }}
+                  transition={{ duration: 0.5, delay: 0.05 }}
+                />
+
+                {/* Smoke puffs */}
+                <SmokePuff delay={0.1} x={-40} y={-20} />
+                <SmokePuff delay={0.15} x={40} y={-30} />
+                <SmokePuff delay={0.2} x={0} y={-50} />
+                <SmokePuff delay={0.12} x={-60} y={10} />
+                <SmokePuff delay={0.18} x={60} y={0} />
+
+                {/* Square block particles */}
+                {particles.map((particle, i) => (
+                  <ExplosionParticle key={i} {...particle} />
                 ))}
 
-                {/* Additional small particles */}
-                {[...Array(16)].map((_, i) => {
-                  const angle = (i / 16) * Math.PI * 2;
-                  const distance = 80 + Math.random() * 120;
-                  return (
-                    <motion.div
-                      key={`small-${i}`}
-                      className="absolute w-3 h-3 md:w-4 md:h-4"
-                      style={{
-                        backgroundColor: blocks[i % blocks.length].color,
-                        boxShadow: `inset -1px -1px 0 rgba(0,0,0,0.3)`,
-                      }}
-                      initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
-                      animate={{
-                        x: Math.cos(angle) * distance,
-                        y: Math.sin(angle) * distance + 50,
-                        scale: 0,
-                        opacity: 0,
-                        rotate: Math.random() * 360,
-                      }}
-                      transition={{
-                        duration: 0.6,
-                        delay: 0.55 + i * 0.02,
-                        ease: "easeOut",
-                      }}
-                    />
-                  );
-                })}
-
                 {/* ARGAS text reveal */}
-                <motion.h1
-                  className="font-pixel text-3xl md:text-5xl text-gold absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 whitespace-nowrap"
+                <motion.div
+                  className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.4, ease: "backOut" }}
-                  style={{
-                    textShadow: "0 0 20px rgba(255, 215, 0, 0.5)",
-                  }}
+                  animate={{ scale: [0, 1.2, 1], opacity: 1 }}
+                  transition={{ delay: 0.4, duration: 0.3, ease: "backOut" }}
                 >
-                  ARGAS
-                </motion.h1>
+                  <h1
+                    className="font-pixel text-4xl md:text-6xl text-gold whitespace-nowrap"
+                    style={{
+                      textShadow: "4px 4px 0 rgba(0,0,0,0.5), 0 0 30px rgba(255,215,0,0.6)",
+                    }}
+                  >
+                    ARGAS
+                  </h1>
+                </motion.div>
               </>
             )}
           </div>
