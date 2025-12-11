@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Calendar, Trophy, Sword, Gift, Star, Users, Zap, Crown } from "lucide-react";
+import { Calendar, Trophy, Sword, Gift, Star, Crown, Clock } from "lucide-react";
 
 const events = [
   {
@@ -9,8 +9,7 @@ const events = [
     description: "Kovok prieš kitus žaidėjus ir laimėk vertingus prizus!",
     icon: Sword,
     prize: "500 Coins + Rare Items",
-    gradient: "from-redstone to-redstone/60",
-    accent: "redstone"
+    color: "redstone",
   },
   {
     title: "Build Battle",
@@ -19,8 +18,7 @@ const events = [
     description: "Parodyk savo kūrybiškumą statybų konkurse.",
     icon: Star,
     prize: "VIP rangas 1 mėnesiui",
-    gradient: "from-gold to-gold/60",
-    accent: "gold"
+    color: "gold",
   },
   {
     title: "Treasure Hunt",
@@ -29,8 +27,7 @@ const events = [
     description: "Surask paslėptus lobius visame serveryje!",
     icon: Gift,
     prize: "Mystery Box x3",
-    gradient: "from-emerald to-emerald/60",
-    accent: "emerald"
+    color: "emerald",
   },
   {
     title: "Clan Wars",
@@ -39,62 +36,96 @@ const events = [
     description: "Klanų mūšiai dėl teritorijų ir garbės.",
     icon: Crown,
     prize: "Clan Base Upgrade",
-    gradient: "from-diamond to-diamond/60",
-    accent: "diamond"
+    color: "diamond",
   },
 ];
 
+const colorMap: Record<string, { bg: string; text: string; border: string; glow: string }> = {
+  redstone: { 
+    bg: "bg-redstone", 
+    text: "text-redstone", 
+    border: "border-redstone",
+    glow: "shadow-[0_0_20px_rgba(255,0,0,0.3)]"
+  },
+  gold: { 
+    bg: "bg-gold", 
+    text: "text-gold", 
+    border: "border-gold",
+    glow: "shadow-[0_0_20px_rgba(255,215,0,0.3)]"
+  },
+  emerald: { 
+    bg: "bg-emerald", 
+    text: "text-emerald", 
+    border: "border-emerald",
+    glow: "shadow-[0_0_20px_rgba(80,200,120,0.3)]"
+  },
+  diamond: { 
+    bg: "bg-diamond", 
+    text: "text-diamond", 
+    border: "border-diamond",
+    glow: "shadow-[0_0_20px_rgba(93,236,245,0.3)]"
+  },
+};
+
 export const Events = () => {
   return (
-    <section id="events" className="py-20 md:py-32 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/20 to-background" />
+    <section id="events" className="py-24 relative overflow-hidden">
+      {/* Background layers */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-card/50 to-background" />
       
-      {/* Animated grid pattern */}
-      <div 
-        className="absolute inset-0 opacity-5"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, hsl(var(--foreground)) 1px, transparent 1px),
-            linear-gradient(to bottom, hsl(var(--foreground)) 1px, transparent 1px)
-          `,
-          backgroundSize: '48px 48px'
-        }}
-      />
+      {/* Animated particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-gold/30"
+            style={{
+              left: `${10 + (i * 7)}%`,
+              top: `${20 + (i % 3) * 25}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.2, 0.6, 0.2],
+            }}
+            transition={{
+              duration: 3 + i * 0.3,
+              repeat: Infinity,
+              delay: i * 0.2,
+            }}
+          />
+        ))}
+      </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <motion.div 
-            className="inline-flex items-center gap-3 mb-6"
-            whileHover={{ scale: 1.02 }}
-          >
+          <div className="inline-flex items-center gap-4 mb-4">
             <motion.div 
-              className="w-14 h-14 bg-gold flex items-center justify-center minecraft-block"
+              className="w-12 h-12 bg-gold flex items-center justify-center minecraft-block"
               animate={{ rotate: [0, 5, -5, 0] }}
               transition={{ duration: 4, repeat: Infinity }}
             >
-              <Calendar className="w-7 h-7 text-accent-foreground" />
+              <Calendar className="w-6 h-6 text-background" />
             </motion.div>
-            <h2 className="text-3xl md:text-5xl font-pixel text-foreground">
-              Serverio Eventai
+            <h2 className="font-pixel text-2xl md:text-4xl text-foreground text-shadow-minecraft">
+              SERVERIO <span className="text-gold">EVENTAI</span>
             </h2>
-          </motion.div>
-          <p className="text-lg text-muted-foreground font-minecraft max-w-2xl mx-auto">
-            Dalyvauk įvairiuose renginiuose ir laimėk nuostabius prizus!
+          </div>
+          <p className="font-minecraft text-xl text-muted-foreground max-w-xl mx-auto">
+            Dalyvauk renginiuose ir laimėk nuostabius prizus!
           </p>
         </motion.div>
 
         {/* Events Grid */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {events.map((event, index) => {
             const IconComponent = event.icon;
+            const colors = colorMap[event.color];
             
             return (
               <motion.div
@@ -102,87 +133,80 @@ export const Events = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ delay: index * 0.1 }}
                 className="group"
               >
                 <motion.div
-                  className="relative h-full bg-card border-4 border-border minecraft-block overflow-hidden"
-                  whileHover={{ y: -8, borderColor: `hsl(var(--${event.accent}))` }}
-                  transition={{ duration: 0.3 }}
+                  className={`relative h-full bg-card border-4 border-border minecraft-block overflow-hidden transition-all duration-300 group-hover:${colors.border} group-hover:${colors.glow}`}
+                  whileHover={{ y: -8 }}
                 >
-                  {/* Gradient Header */}
-                  <div className={`h-2 bg-gradient-to-r ${event.gradient}`} />
+                  {/* Color bar */}
+                  <div className={`h-2 ${colors.bg}`} />
                   
+                  {/* Icon */}
+                  <div className="pt-6 px-5 flex justify-center">
+                    <motion.div 
+                      className={`w-16 h-16 ${colors.bg} flex items-center justify-center minecraft-block`}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                    >
+                      <IconComponent className="w-8 h-8 text-white" />
+                    </motion.div>
+                  </div>
+
                   {/* Content */}
-                  <div className="p-6">
-                    {/* Icon & Title */}
-                    <div className="flex items-start gap-4 mb-4">
-                      <motion.div 
-                        className={`w-14 h-14 bg-${event.accent} flex items-center justify-center minecraft-block shrink-0`}
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                      >
-                        <IconComponent className="w-7 h-7 text-white" />
-                      </motion.div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-pixel text-foreground mb-1">
-                          {event.title}
-                        </h3>
-                        <div className="flex flex-wrap items-center gap-2 text-sm font-minecraft">
-                          <span className={`text-${event.accent}`}>{event.date}</span>
-                          <span className="text-muted-foreground">•</span>
-                          <span className="text-muted-foreground">{event.time}</span>
-                        </div>
-                      </div>
+                  <div className="p-5 text-center">
+                    <h3 className={`font-pixel text-sm mb-3 ${colors.text}`}>
+                      {event.title}
+                    </h3>
+                    
+                    <div className="flex items-center justify-center gap-2 mb-3">
+                      <Clock className="w-4 h-4 text-muted-foreground" />
+                      <span className="font-minecraft text-base text-muted-foreground">
+                        {event.date} • {event.time}
+                      </span>
                     </div>
 
-                    {/* Description */}
-                    <p className="text-muted-foreground font-minecraft text-sm mb-5 leading-relaxed">
+                    <p className="font-minecraft text-sm text-muted-foreground mb-4 leading-relaxed">
                       {event.description}
                     </p>
 
-                    {/* Prize Box */}
-                    <div className={`flex items-center gap-3 p-4 bg-${event.accent}/10 border-2 border-${event.accent}/30 minecraft-block`}>
-                      <Trophy className={`w-5 h-5 text-${event.accent} shrink-0`} />
-                      <div>
-                        <p className="text-xs font-minecraft text-muted-foreground uppercase tracking-wider">Prizas</p>
-                        <p className={`text-sm font-minecraft text-${event.accent} font-bold`}>
-                          {event.prize}
-                        </p>
-                      </div>
+                    {/* Prize */}
+                    <div className={`flex items-center justify-center gap-2 py-3 px-4 bg-muted/50 border-2 ${colors.border}/30 minecraft-block`}>
+                      <Trophy className={`w-4 h-4 ${colors.text}`} />
+                      <span className={`font-minecraft text-sm ${colors.text} font-bold`}>
+                        {event.prize}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Hover Glow */}
+                  {/* Corner decorations */}
                   <motion.div
-                    className={`absolute inset-0 bg-gradient-to-t from-${event.accent}/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none`}
+                    className={`absolute top-4 right-4 w-2 h-2 ${colors.bg}`}
+                    animate={{ opacity: [0.3, 1, 0.3] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
                   />
-
-                  {/* Corner Decoration */}
-                  <div className="absolute top-4 right-4">
-                    <motion.div
-                      className={`w-3 h-3 bg-${event.accent}`}
-                      animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
-                    />
-                  </div>
+                  <motion.div
+                    className={`absolute bottom-4 left-4 w-2 h-2 ${colors.bg}`}
+                    animate={{ opacity: [0.3, 1, 0.3] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 + 1 }}
+                  />
                 </motion.div>
               </motion.div>
             );
           })}
         </div>
 
-        {/* Bottom CTA */}
+        {/* Discord CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.5 }}
           className="text-center mt-12"
         >
           <div className="inline-flex items-center gap-3 px-6 py-3 bg-card border-2 border-border minecraft-block">
-            <Zap className="w-5 h-5 text-gold" />
-            <span className="font-minecraft text-muted-foreground">
-              Prisijunk prie <span className="text-gold">Discord</span> ir gauk pranešimus apie eventus!
+            <span className="font-minecraft text-lg text-muted-foreground">
+              Prisijunk prie <span className="text-gold font-bold">Discord</span> ir gauk pranešimus!
             </span>
           </div>
         </motion.div>
