@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sword, Map, Video, Calendar, MessageSquare, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import argasLogo from "@/assets/argas-logo.png";
 
 const navItems = [
   { name: "Discord", href: "#discord", icon: MessageSquare },
@@ -26,12 +27,11 @@ export const Navbar = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="w-12 h-12 bg-grass flex items-center justify-center minecraft-block">
-              <span className="font-pixel text-primary-foreground text-lg">A</span>
-            </div>
-            <span className="font-pixel text-foreground text-sm md:text-base hidden sm:block">
-              ARGAS<span className="text-emerald">HUB</span>
-            </span>
+            <img 
+              src={argasLogo} 
+              alt="Argas" 
+              className="h-10 md:h-12 w-auto"
+            />
           </motion.a>
 
           {/* Desktop Navigation */}
