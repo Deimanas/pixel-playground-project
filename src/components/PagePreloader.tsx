@@ -1,6 +1,22 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import argasLogo from "@/assets/argas-logo.png";
+
+const PixelLogo = () => (
+  <div className="flex items-center gap-3" aria-label="Argas">
+    <div className="relative w-12 h-12 md:w-16 md:h-16">
+      <div className="absolute inset-0 bg-emerald/80" style={{ imageRendering: "pixelated" }} />
+      <div
+        className="absolute inset-1 bg-foreground"
+        style={{ boxShadow: "6px 6px 0 rgba(0,0,0,0.35)", imageRendering: "pixelated" }}
+      />
+      <div className="absolute inset-2 bg-emerald" style={{ imageRendering: "pixelated" }} />
+    </div>
+    <div className="flex flex-col leading-tight">
+      <span className="font-pixel text-xl md:text-2xl">ARGAS</span>
+      <span className="font-minecraft text-xs text-muted-foreground">Minecraft bendruomenė</span>
+    </div>
+  </div>
+);
 
 // Minecraft explosion particle - authentic sprite-like appearance
 // The Minecraft explosion is a series of white/gray cloud puffs that appear as 
@@ -239,14 +255,9 @@ export const PagePreloader = ({ onComplete }: { onComplete: () => void }) => {
                   animate={{ scale: [0, 1.1, 1], opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.2, ease: "backOut" }}
                 >
-                  <img 
-                    src={argasLogo} 
-                    alt="Argas" 
-                    className="h-16 md:h-24 w-auto"
-                    style={{
-                      filter: "drop-shadow(3px 3px 0 rgba(0,0,0,0.5)) drop-shadow(0 0 20px rgba(255,215,0,0.4))",
-                    }}
-                  />
+                  <div style={{ filter: "drop-shadow(3px 3px 0 rgba(0,0,0,0.45)) drop-shadow(0 0 18px rgba(52,211,153,0.35))" }}>
+                    <PixelLogo />
+                  </div>
                 </motion.div>
               </>
             )}

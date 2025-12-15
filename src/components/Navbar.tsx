@@ -1,8 +1,23 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sword, Map, Video, Calendar, MessageSquare, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import argasLogo from "@/assets/argas-logo.png";
+
+const PixelLogo = () => (
+  <div className="flex items-center gap-3" aria-label="Argas">
+    <div className="relative w-10 h-10">
+      <div className="absolute inset-0 bg-emerald/80" style={{ imageRendering: "pixelated" }} />
+      <div
+        className="absolute inset-1 bg-foreground"
+        style={{ boxShadow: "4px 4px 0 rgba(0,0,0,0.35)", imageRendering: "pixelated" }}
+      />
+      <div className="absolute inset-2 bg-emerald" style={{ imageRendering: "pixelated" }} />
+    </div>
+    <div className="flex flex-col leading-none">
+      <span className="font-pixel text-lg md:text-xl">ARGAS</span>
+      <span className="font-minecraft text-[10px] md:text-xs text-muted-foreground">Minecraft bendruomenė</span>
+    </div>
+  </div>
+);
 
 const navItems = [
   { name: "Discord", href: "#discord", icon: MessageSquare },
@@ -24,14 +39,10 @@ export const Navbar = () => {
           <motion.a
             href="#"
             className="flex items-center gap-3"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
-            <img 
-              src={argasLogo} 
-              alt="Argas" 
-              className="h-10 md:h-12 w-auto"
-            />
+            <PixelLogo />
           </motion.a>
 
           {/* Desktop Navigation */}
