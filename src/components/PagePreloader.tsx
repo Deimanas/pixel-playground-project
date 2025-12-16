@@ -1,22 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-
-const PixelLogo = () => (
-  <div className="flex items-center gap-3" aria-label="Argas">
-    <div className="relative w-12 h-12 md:w-16 md:h-16">
-      <div className="absolute inset-0 bg-emerald/80" style={{ imageRendering: "pixelated" }} />
-      <div
-        className="absolute inset-1 bg-foreground"
-        style={{ boxShadow: "6px 6px 0 rgba(0,0,0,0.35)", imageRendering: "pixelated" }}
-      />
-      <div className="absolute inset-2 bg-emerald" style={{ imageRendering: "pixelated" }} />
-    </div>
-    <div className="flex flex-col leading-tight">
-      <span className="font-pixel text-xl md:text-2xl">ARGAS</span>
-      <span className="font-minecraft text-xs text-muted-foreground">Minecraft bendruomenė</span>
-    </div>
-  </div>
-);
+import argasLogo from "@/assets/argas-logo.png";
 
 // Minecraft explosion particle - authentic sprite-like appearance
 // The Minecraft explosion is a series of white/gray cloud puffs that appear as 
@@ -147,49 +131,49 @@ export const PagePreloader = ({ onComplete }: { onComplete: () => void }) => {
   // Generate explosion sprites in a spherical pattern
   const explosionSprites: ExplosionSpriteProps[] = [];
   
-  // Center explosion - MUCH LARGER
-  explosionSprites.push({ delay: 0, x: 0, y: 0, size: 120 });
+  // Center explosion
+  explosionSprites.push({ delay: 0, x: 0, y: 0, size: 48 });
   
-  // Inner ring (8 sprites) - LARGER
+  // Inner ring (8 sprites)
   for (let i = 0; i < 8; i++) {
     const angle = (i / 8) * Math.PI * 2;
     explosionSprites.push({
       delay: 0.02 + Math.random() * 0.03,
-      x: Math.cos(angle) * 90,
-      y: Math.sin(angle) * 90,
-      size: 80 + Math.random() * 30,
+      x: Math.cos(angle) * 35,
+      y: Math.sin(angle) * 35,
+      size: 36 + Math.random() * 12,
     });
   }
   
-  // Outer ring (12 sprites) - LARGER
+  // Outer ring (12 sprites)
   for (let i = 0; i < 12; i++) {
     const angle = (i / 12) * Math.PI * 2 + 0.15;
     explosionSprites.push({
       delay: 0.05 + Math.random() * 0.05,
-      x: Math.cos(angle) * 180,
-      y: Math.sin(angle) * 180,
-      size: 65 + Math.random() * 35,
+      x: Math.cos(angle) * 70,
+      y: Math.sin(angle) * 70,
+      size: 28 + Math.random() * 16,
     });
   }
 
-  // Far ring (16 sprites) - LARGER
+  // Far ring (16 sprites)
   for (let i = 0; i < 16; i++) {
     const angle = (i / 16) * Math.PI * 2 + 0.1;
     explosionSprites.push({
       delay: 0.08 + Math.random() * 0.06,
-      x: Math.cos(angle) * 280,
-      y: Math.sin(angle) * 280,
-      size: 50 + Math.random() * 30,
+      x: Math.cos(angle) * 110,
+      y: Math.sin(angle) * 110,
+      size: 20 + Math.random() * 14,
     });
   }
 
-  // Debris particles - LARGER spread
+  // Debris particles
   const debrisParticles = [];
-  for (let i = 0; i < 32; i++) {
+  for (let i = 0; i < 24; i++) {
     debrisParticles.push({
       delay: Math.random() * 0.08,
-      angle: (i / 32) * Math.PI * 2 + Math.random() * 0.4,
-      distance: 150 + Math.random() * 200,
+      angle: (i / 24) * Math.PI * 2 + Math.random() * 0.4,
+      distance: 60 + Math.random() * 80,
     });
   }
 
@@ -229,13 +213,13 @@ export const PagePreloader = ({ onComplete }: { onComplete: () => void }) => {
             {/* Explosion Phase - Authentic Minecraft style */}
             {phase === "exploding" && (
               <>
-                {/* White flash at center - LARGER */}
+                {/* White flash at center */}
                 <motion.div
-                  className="absolute w-40 h-40 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 bg-white"
+                  className="absolute w-20 h-20 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 bg-white"
                   style={{ imageRendering: 'pixelated' }}
                   initial={{ scale: 0, opacity: 1 }}
-                  animate={{ scale: 5, opacity: 0 }}
-                  transition={{ duration: 0.15 }}
+                  animate={{ scale: 3, opacity: 0 }}
+                  transition={{ duration: 0.12 }}
                 />
 
                 {/* Explosion cloud sprites */}
@@ -255,9 +239,14 @@ export const PagePreloader = ({ onComplete }: { onComplete: () => void }) => {
                   animate={{ scale: [0, 1.1, 1], opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.2, ease: "backOut" }}
                 >
-                  <div style={{ filter: "drop-shadow(3px 3px 0 rgba(0,0,0,0.45)) drop-shadow(0 0 18px rgba(52,211,153,0.35))" }}>
-                    <PixelLogo />
-                  </div>
+                  <img 
+                    src={argasLogo} 
+                    alt="Argas" 
+                    className="h-16 md:h-24 w-auto"
+                    style={{
+                      filter: "drop-shadow(3px 3px 0 rgba(0,0,0,0.5)) drop-shadow(0 0 20px rgba(255,215,0,0.4))",
+                    }}
+                  />
                 </motion.div>
               </>
             )}
