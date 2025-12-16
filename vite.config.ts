@@ -9,11 +9,6 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  build: {
-    outDir: "wordpress-theme/pixel-playground-theme/build",
-    emptyOutDir: true,
-    manifest: true,
-  },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
