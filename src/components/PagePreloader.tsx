@@ -131,49 +131,49 @@ export const PagePreloader = ({ onComplete }: { onComplete: () => void }) => {
   // Generate explosion sprites in a spherical pattern
   const explosionSprites: ExplosionSpriteProps[] = [];
   
-  // Center explosion
-  explosionSprites.push({ delay: 0, x: 0, y: 0, size: 48 });
+  // Center explosion - MUCH LARGER
+  explosionSprites.push({ delay: 0, x: 0, y: 0, size: 120 });
   
-  // Inner ring (8 sprites)
+  // Inner ring (8 sprites) - LARGER
   for (let i = 0; i < 8; i++) {
     const angle = (i / 8) * Math.PI * 2;
     explosionSprites.push({
       delay: 0.02 + Math.random() * 0.03,
-      x: Math.cos(angle) * 35,
-      y: Math.sin(angle) * 35,
-      size: 36 + Math.random() * 12,
+      x: Math.cos(angle) * 90,
+      y: Math.sin(angle) * 90,
+      size: 80 + Math.random() * 30,
     });
   }
   
-  // Outer ring (12 sprites)
+  // Outer ring (12 sprites) - LARGER
   for (let i = 0; i < 12; i++) {
     const angle = (i / 12) * Math.PI * 2 + 0.15;
     explosionSprites.push({
       delay: 0.05 + Math.random() * 0.05,
-      x: Math.cos(angle) * 70,
-      y: Math.sin(angle) * 70,
-      size: 28 + Math.random() * 16,
+      x: Math.cos(angle) * 180,
+      y: Math.sin(angle) * 180,
+      size: 65 + Math.random() * 35,
     });
   }
 
-  // Far ring (16 sprites)
+  // Far ring (16 sprites) - LARGER
   for (let i = 0; i < 16; i++) {
     const angle = (i / 16) * Math.PI * 2 + 0.1;
     explosionSprites.push({
       delay: 0.08 + Math.random() * 0.06,
-      x: Math.cos(angle) * 110,
-      y: Math.sin(angle) * 110,
-      size: 20 + Math.random() * 14,
+      x: Math.cos(angle) * 280,
+      y: Math.sin(angle) * 280,
+      size: 50 + Math.random() * 30,
     });
   }
 
-  // Debris particles
+  // Debris particles - LARGER spread
   const debrisParticles = [];
-  for (let i = 0; i < 24; i++) {
+  for (let i = 0; i < 32; i++) {
     debrisParticles.push({
       delay: Math.random() * 0.08,
-      angle: (i / 24) * Math.PI * 2 + Math.random() * 0.4,
-      distance: 60 + Math.random() * 80,
+      angle: (i / 32) * Math.PI * 2 + Math.random() * 0.4,
+      distance: 150 + Math.random() * 200,
     });
   }
 
@@ -213,13 +213,13 @@ export const PagePreloader = ({ onComplete }: { onComplete: () => void }) => {
             {/* Explosion Phase - Authentic Minecraft style */}
             {phase === "exploding" && (
               <>
-                {/* White flash at center */}
+                {/* White flash at center - LARGER */}
                 <motion.div
-                  className="absolute w-20 h-20 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 bg-white"
+                  className="absolute w-40 h-40 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 bg-white"
                   style={{ imageRendering: 'pixelated' }}
                   initial={{ scale: 0, opacity: 1 }}
-                  animate={{ scale: 3, opacity: 0 }}
-                  transition={{ duration: 0.12 }}
+                  animate={{ scale: 5, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
                 />
 
                 {/* Explosion cloud sprites */}
