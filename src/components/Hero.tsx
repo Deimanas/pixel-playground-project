@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Users, Gamepad2 } from "lucide-react";
+import heroBg from "@/assets/hero-bg.png";
 import { AnimatedCounter } from "./AnimatedCounter";
 
 interface HeroProps {
@@ -10,27 +11,12 @@ interface HeroProps {
 export const Hero = ({ startCounters = true }: HeroProps) => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Stylizuotas fonas be paveikslėlių */}
-      <div
+      {/* Background Image */}
+      <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.1), transparent 25%)," +
-            "radial-gradient(circle at 80% 10%, rgba(59, 130, 246, 0.08), transparent 28%)," +
-            "radial-gradient(circle at 50% 70%, rgba(139, 92, 246, 0.12), transparent 30%)," +
-            "linear-gradient(180deg, rgba(12, 14, 24, 0.9) 0%, rgba(12, 14, 24, 0.8) 40%, rgba(12, 14, 24, 1) 100%)",
-        }}
+        style={{ backgroundImage: `url(${heroBg})` }}
       >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)," +
-              "linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-            opacity: 0.12,
-          }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background" />
       </div>
 
       {/* Floating Blocks Decoration */}
