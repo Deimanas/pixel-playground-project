@@ -1,68 +1,75 @@
 /**
- * ArgasHub Theme JavaScript
+ * ArgasHub Minecraft Theme - Main JavaScript
  * 
  * @package ArgasHub
  * @version 1.0.0
  */
 
-(function($) {
+(function() {
     'use strict';
 
-    // ===========================================
-    // Preloader
-    // ===========================================
+    // ================================================
+    // PRELOADER
+    // ================================================
+    const preloader = document.querySelector('.preloader');
+    
     function hidePreloader() {
-        const preloader = document.getElementById('preloader');
         if (preloader) {
-            setTimeout(function() {
+            preloader.classList.add('explode');
+            setTimeout(() => {
                 preloader.style.opacity = '0';
                 preloader.style.visibility = 'hidden';
-                setTimeout(function() {
-                    preloader.style.display = 'none';
-                }, 500);
-            }, 1000);
+                document.body.classList.remove('preloader-active');
+                
+                // Trigger counter animations after preloader
+                initCounters();
+            }, 500);
         }
     }
 
-    // ===========================================
-    // Mobile Navigation
-    // ===========================================
-    function initMobileNav() {
-        const toggle = document.getElementById('navbar-toggle');
-        const menu = document.getElementById('navbar-menu');
+    window.addEventListener('load', function() {
+        setTimeout(hidePreloader, 1500);
+    });
 
-        if (toggle && menu) {
-            toggle.addEventListener('click', function() {
-                menu.classList.toggle('active');
-                toggle.classList.toggle('active');
+    // ================================================
+    // MOBILE NAVIGATION
+    // ================================================
+    function initMobileNav() {
+        const navToggle = document.querySelector('.navbar-toggle');
+        const navMenu = document.querySelector('.navbar-nav');
+
+        if (navToggle && navMenu) {
+            navToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                navToggle.classList.toggle('active');
             });
 
             // Close menu on link click
-            const links = menu.querySelectorAll('.navbar-link');
-            links.forEach(function(link) {
+            document.querySelectorAll('.navbar-link').forEach(link => {
                 link.addEventListener('click', function() {
-                    menu.classList.remove('active');
-                    toggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                    navToggle.classList.remove('active');
                 });
             });
         }
     }
 
-    // ===========================================
-    // Smooth Scrolling
-    // ===========================================
+    // ================================================
+    // SMOOTH SCROLL
+    // ================================================
     function initSmoothScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
                 if (href === '#') return;
-
+                
+                e.preventDefault();
                 const target = document.querySelector(href);
+                
                 if (target) {
-                    e.preventDefault();
-                    const navbarHeight = document.getElementById('navbar').offsetHeight;
-                    const targetPosition = target.offsetTop - navbarHeight;
-
+                    const navbarHeight = document.querySelector('.navbar')?.offsetHeight || 0;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                    
                     window.scrollTo({
                         top: targetPosition,
                         behavior: 'smooth'
@@ -72,80 +79,200 @@
         });
     }
 
-    // ===========================================
-    // Navbar Scroll Effect
-    // ===========================================
-    function initNavbarScroll() {
-        const navbar = document.getElementById('navbar');
-        let lastScrollTop = 0;
-
-        window.addEventListener('scroll', function() {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-            if (scrollTop > 100) {
-                navbar.style.background = 'hsl(222 47% 6% / 0.98)';
-                navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
-            } else {
-                navbar.style.background = 'hsl(222 47% 6% / 0.95)';
-                navbar.style.boxShadow = 'none';
+    // ================================================
+    // ANIMATED COUNTERS
+    // ================================================
+    function initCounters() {
+        const counters = document.querySelectorAll('[data-counter], .stat-number[data-count]');
+        
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-counter') || counter.getAttribute('data-count'));
+            if (!target) return;
+            
+            const duration = 2000;
+            const startTime = performance.now();
+            
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const current = Math.floor(easeOutQuart * target);
+                
+                counter.textContent = current + '+';
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target + '+';
+                }
             }
-
-            lastScrollTop = scrollTop;
+            
+            requestAnimationFrame(updateCounter);
         });
     }
 
-    // ===========================================
-    // Animated Counters
-    // ===========================================
-    function initCounters() {
-        const counters = document.querySelectorAll('.stat-number[data-count]');
-        
-        const animateCounter = function(counter) {
-            const target = parseInt(counter.getAttribute('data-count'));
-            const duration = 2000;
-            const step = target / (duration / 16);
-            let current = 0;
-
-            const updateCounter = function() {
-                current += step;
-                if (current < target) {
-                    counter.textContent = Math.floor(current);
-                    requestAnimationFrame(updateCounter);
-                } else {
-                    counter.textContent = target;
-                }
-            };
-
-            updateCounter();
+    // ================================================
+    // SCROLL ANIMATIONS (Intersection Observer)
+    // ================================================
+    function initScrollAnimations() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
         };
 
-        // Intersection Observer for counters
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    animateCounter(entry.target);
+                    entry.target.classList.add('animate-in');
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.5 });
+        }, observerOptions);
 
-        counters.forEach(function(counter) {
-            observer.observe(counter);
+        document.querySelectorAll('.animate-on-scroll, .animate-fade-in-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
         });
     }
 
-    // ===========================================
-    // Form Progress / XP Bar
-    // ===========================================
+    // ================================================
+    // NAVBAR SCROLL EFFECT
+    // ================================================
+    function initNavbarScroll() {
+        const navbar = document.querySelector('.navbar');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', function() {
+            const currentScroll = window.pageYOffset;
+            
+            if (navbar) {
+                if (currentScroll > 100) {
+                    navbar.classList.add('scrolled');
+                    navbar.style.background = 'hsl(222 47% 6% / 0.98)';
+                    navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+                } else {
+                    navbar.classList.remove('scrolled');
+                    navbar.style.background = 'hsl(222 47% 6% / 0.95)';
+                    navbar.style.boxShadow = 'none';
+                }
+                
+                // Hide/show on scroll
+                if (currentScroll > lastScroll && currentScroll > 300) {
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    navbar.style.transform = 'translateY(0)';
+                }
+            }
+            
+            lastScroll = currentScroll;
+        });
+    }
+
+    // ================================================
+    // ACTIVE NAV LINK ON SCROLL
+    // ================================================
+    function updateActiveNav() {
+        const sections = document.querySelectorAll('section[id]');
+        const scrollPosition = window.scrollY + 100;
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                document.querySelectorAll('.navbar-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + sectionId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }
+
+    // ================================================
+    // COPY TO CLIPBOARD (for server IP)
+    // ================================================
+    window.copyServerIP = function() {
+        const serverIP = document.querySelector('[onclick="copyServerIP()"]');
+        if (!serverIP) return;
+
+        const ip = serverIP.textContent.replace(/[^\w.]/g, '').trim();
+        
+        navigator.clipboard.writeText(ip).then(function() {
+            const originalText = serverIP.innerHTML;
+            serverIP.innerHTML = '<i class="fas fa-check"></i> Nukopijuota!';
+            serverIP.classList.add('copied');
+            
+            setTimeout(function() {
+                serverIP.innerHTML = originalText;
+                serverIP.classList.remove('copied');
+            }, 2000);
+        }).catch(function(err) {
+            console.error('Failed to copy:', err);
+        });
+    };
+
+    // ================================================
+    // BLOCK HOVER EFFECT
+    // ================================================
+    function initBlockEffects() {
+        document.querySelectorAll('.minecraft-block, .card').forEach(block => {
+            block.addEventListener('mouseenter', function() {
+                this.classList.add('animate-block-bounce');
+            });
+            
+            block.addEventListener('animationend', function() {
+                this.classList.remove('animate-block-bounce');
+            });
+        });
+    }
+
+    // ================================================
+    // GALLERY LIGHTBOX
+    // ================================================
+    function initGalleryLightbox() {
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        galleryItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                const img = item.querySelector('img');
+                if (!img) return;
+
+                const lightbox = document.createElement('div');
+                lightbox.className = 'lightbox';
+                
+                const lightboxImg = document.createElement('img');
+                lightboxImg.src = img.src;
+                
+                lightbox.appendChild(lightboxImg);
+                document.body.appendChild(lightbox);
+                
+                lightbox.addEventListener('click', function() {
+                    lightbox.remove();
+                });
+            });
+        });
+    }
+
+    // ================================================
+    // FORM PROGRESS / XP BAR
+    // ================================================
     function initFormProgress() {
         const form = document.getElementById('application-form');
         const progressBar = document.getElementById('form-progress');
-        const progressText = progressBar ? progressBar.parentElement.querySelector('.xp-bar-text') : null;
-
+        
         if (!form || !progressBar) return;
 
-        const requiredFields = form.querySelectorAll('[required]');
         const totalFields = form.querySelectorAll('input, textarea, select').length;
+        const progressText = progressBar.parentElement?.querySelector('.xp-bar-text');
 
         const updateProgress = function() {
             let filledFields = 0;
@@ -170,14 +297,14 @@
         });
     }
 
-    // ===========================================
-    // Form Submission (AJAX)
-    // ===========================================
+    // ================================================
+    // FORM SUBMISSION (AJAX)
+    // ================================================
     function initFormSubmission() {
         const form = document.getElementById('application-form');
         const messageDiv = document.getElementById('form-message');
 
-        if (!form) return;
+        if (!form || typeof argashub_ajax === 'undefined') return;
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -196,10 +323,8 @@
                 body: formData,
                 credentials: 'same-origin'
             })
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
+            .then(response => response.json())
+            .then(data => {
                 messageDiv.style.display = 'block';
                 
                 if (data.success) {
@@ -212,7 +337,7 @@
                     const progressBar = document.getElementById('form-progress');
                     if (progressBar) {
                         progressBar.style.width = '0%';
-                        const progressText = progressBar.parentElement.querySelector('.xp-bar-text');
+                        const progressText = progressBar.parentElement?.querySelector('.xp-bar-text');
                         if (progressText) progressText.textContent = '0% Užpildyta';
                     }
                 } else {
@@ -224,7 +349,7 @@
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
             })
-            .catch(function(error) {
+            .catch(error => {
                 console.error('Error:', error);
                 messageDiv.style.display = 'block';
                 messageDiv.innerHTML = '<div class="card" style="background: hsl(0 85% 50% / 0.2); border-color: hsl(0 85% 50%);">' +
@@ -236,98 +361,50 @@
         });
     }
 
-    // ===========================================
-    // Copy Server IP
-    // ===========================================
-    window.copyServerIP = function() {
-        const serverIP = document.querySelector('[onclick="copyServerIP()"]');
-        if (!serverIP) return;
+    // ================================================
+    // PARTICLE EFFECTS (Ambient)
+    // ================================================
+    function initParticles() {
+        const particleContainer = document.querySelector('.particle-container');
+        if (!particleContainer) return;
 
-        const ip = serverIP.textContent.replace(/[^\w.]/g, '').trim();
-        
-        navigator.clipboard.writeText(ip).then(function() {
-            const originalText = serverIP.innerHTML;
-            serverIP.innerHTML = '<i class="fas fa-check"></i> Nukopijuota!';
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'ambient-particle';
+            particle.style.cssText = `
+                position: absolute;
+                width: ${Math.random() * 4 + 2}px;
+                height: ${Math.random() * 4 + 2}px;
+                background: hsl(142 76% 36% / ${Math.random() * 0.5 + 0.2});
+                left: ${Math.random() * 100}%;
+                top: ${Math.random() * 100}%;
+                pointer-events: none;
+                animation: float ${Math.random() * 3 + 2}s ease-in-out infinite;
+            `;
+            particleContainer.appendChild(particle);
             
-            setTimeout(function() {
-                serverIP.innerHTML = originalText;
-            }, 2000);
-        }).catch(function(err) {
-            console.error('Failed to copy:', err);
-        });
-    };
+            setTimeout(() => particle.remove(), 5000);
+        }
 
-    // ===========================================
-    // Scroll Animations (Intersection Observer)
-    // ===========================================
-    function initScrollAnimations() {
-        const animatedElements = document.querySelectorAll('.animate-fade-in-up');
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-
-        animatedElements.forEach(function(el) {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
+        setInterval(createParticle, 500);
     }
 
-    // ===========================================
-    // Gallery Lightbox (Simple)
-    // ===========================================
-    function initGalleryLightbox() {
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        
-        galleryItems.forEach(function(item) {
-            item.addEventListener('click', function() {
-                const img = item.querySelector('img');
-                if (!img) return;
-
-                const lightbox = document.createElement('div');
-                lightbox.className = 'lightbox';
-                lightbox.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 9999; cursor: pointer;';
-                
-                const lightboxImg = document.createElement('img');
-                lightboxImg.src = img.src;
-                lightboxImg.style.cssText = 'max-width: 90%; max-height: 90%; object-fit: contain;';
-                
-                lightbox.appendChild(lightboxImg);
-                document.body.appendChild(lightbox);
-                
-                lightbox.addEventListener('click', function() {
-                    lightbox.remove();
-                });
-            });
-        });
-    }
-
-    // ===========================================
-    // Initialize Everything
-    // ===========================================
+    // ================================================
+    // INITIALIZE EVERYTHING
+    // ================================================
     document.addEventListener('DOMContentLoaded', function() {
         initMobileNav();
         initSmoothScroll();
         initNavbarScroll();
-        initCounters();
+        initScrollAnimations();
+        initBlockEffects();
+        initGalleryLightbox();
         initFormProgress();
         initFormSubmission();
-        initScrollAnimations();
-        initGalleryLightbox();
+        initParticles();
+        
+        // Update active nav on scroll
+        window.addEventListener('scroll', updateActiveNav);
     });
 
-    window.addEventListener('load', function() {
-        hidePreloader();
-    });
-
-})(jQuery);
+})();
