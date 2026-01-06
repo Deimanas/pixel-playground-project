@@ -24,10 +24,10 @@ get_header();
         </div>
         
         <!-- Floating Minecraft Blocks - Identical to React -->
-        <div class="hero-floating-block grass-block" style="top: 8rem; left: 2.5rem; width: 4rem; height: 4rem;"></div>
-        <div class="hero-floating-block dirt-block" style="top: 12rem; right: 5rem; width: 3rem; height: 3rem; animation-delay: 0.5s;"></div>
-        <div class="hero-floating-block stone-block" style="bottom: 8rem; left: 5rem; width: 2.5rem; height: 2.5rem; animation-delay: 1s;"></div>
-        <div class="hero-floating-block diamond-block" style="top: 16rem; left: 25%; width: 2rem; height: 2rem; animation-delay: 0.3s;"></div>
+        <div class="absolute top-32 left-10 w-16 h-16 bg-grass minecraft-block hidden md:block float-animation"></div>
+        <div class="absolute top-48 right-20 w-12 h-12 bg-dirt minecraft-block hidden md:block float-animation delay-500"></div>
+        <div class="absolute bottom-32 left-20 w-10 h-10 bg-stone minecraft-block hidden md:block float-animation delay-1000"></div>
+        <div class="absolute top-64 left-1/4 w-8 h-8 bg-diamond minecraft-block hidden lg:block float-animation delay-300"></div>
         
         <div class="container">
             <div class="hero-content animate-fade-in-up">

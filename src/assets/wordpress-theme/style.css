@@ -171,6 +171,43 @@ img {
     );
 }
 
+/* Block Background Colors - matching React */
+.bg-grass {
+    background-color: hsl(var(--grass));
+}
+
+.bg-dirt {
+    background-color: hsl(var(--dirt));
+}
+
+.bg-stone {
+    background-color: hsl(var(--stone));
+}
+
+.bg-diamond {
+    background-color: hsl(var(--diamond));
+}
+
+.bg-gold {
+    background-color: hsl(var(--gold));
+}
+
+.bg-obsidian {
+    background-color: hsl(var(--obsidian));
+}
+
+.bg-emerald {
+    background-color: hsl(var(--emerald));
+}
+
+.bg-redstone {
+    background-color: hsl(var(--redstone));
+}
+
+.bg-lapis {
+    background-color: hsl(var(--lapis));
+}
+
 /* ==========================================
    BUTTON STYLES
    ========================================== */
@@ -1788,4 +1825,74 @@ textarea::placeholder {
         hsl(45 100% 40%) 50%, 
         hsl(45 100% 35%) 100%
     );
+}
+
+/* ==========================================
+   TAILWIND-STYLE UTILITIES (for React parity)
+   ========================================== */
+
+/* Position */
+.absolute { position: absolute; }
+.relative { position: relative; }
+.fixed { position: fixed; }
+
+/* Display */
+.hidden { display: none; }
+.block { display: block; }
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.grid { display: grid; }
+
+/* Spacing - Top */
+.top-32 { top: 8rem; }
+.top-48 { top: 12rem; }
+.top-64 { top: 16rem; }
+
+/* Spacing - Bottom */
+.bottom-32 { bottom: 8rem; }
+.bottom-8 { bottom: 2rem; }
+
+/* Spacing - Left */
+.left-10 { left: 2.5rem; }
+.left-20 { left: 5rem; }
+.left-1\/4 { left: 25%; }
+.left-1\/2 { left: 50%; }
+
+/* Spacing - Right */
+.right-20 { right: 5rem; }
+
+/* Width */
+.w-8 { width: 2rem; }
+.w-10 { width: 2.5rem; }
+.w-12 { width: 3rem; }
+.w-16 { width: 4rem; }
+
+/* Height */
+.h-8 { height: 2rem; }
+.h-10 { height: 2.5rem; }
+.h-12 { height: 3rem; }
+.h-16 { height: 4rem; }
+
+/* Transform */
+.-translate-x-1\/2 { transform: translateX(-50%); }
+
+/* Flex */
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.flex-col { flex-direction: column; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+
+/* Animation Delays */
+.delay-300 { animation-delay: 0.3s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-1000 { animation-delay: 1s; }
+
+/* Responsive Utilities */
+@media (min-width: 768px) {
+    .md\:block { display: block; }
+}
+
+@media (min-width: 1024px) {
+    .lg\:block { display: block; }
 }
