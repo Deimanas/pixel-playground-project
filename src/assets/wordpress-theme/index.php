@@ -23,54 +23,84 @@ get_header();
             <div class="hero-overlay"></div>
         </div>
         
-        <!-- Floating blocks -->
-        <div class="floating-block" style="top: 20%; left: 10%;"></div>
-        <div class="floating-block" style="top: 60%; right: 15%; animation-delay: -2s;"></div>
-        <div class="floating-block" style="bottom: 20%; left: 20%; animation-delay: -4s;"></div>
+        <!-- Floating Minecraft Blocks - Identical to React -->
+        <div class="hero-floating-block grass-block" style="top: 8rem; left: 2.5rem; width: 4rem; height: 4rem;"></div>
+        <div class="hero-floating-block dirt-block" style="top: 12rem; right: 5rem; width: 3rem; height: 3rem; animation-delay: 0.5s;"></div>
+        <div class="hero-floating-block stone-block" style="bottom: 8rem; left: 5rem; width: 2.5rem; height: 2.5rem; animation-delay: 1s;"></div>
+        <div class="hero-floating-block diamond-block" style="top: 16rem; left: 25%; width: 2rem; height: 2rem; animation-delay: 0.3s;"></div>
         
         <div class="container">
             <div class="hero-content animate-fade-in-up">
                 <h1 class="hero-title">
-                    <?php echo wp_kses_post(get_theme_mod('hero_title', 'ARGAS<span class="text-emerald">HUB</span>')); ?>
+                    <?php echo wp_kses_post(get_theme_mod('hero_title', 'ĮSITRAUK Į MŪSŲ<br><span class="text-emerald">BENDRUOMENĘ</span>')); ?>
                 </h1>
                 <p class="hero-subtitle">
-                    <?php echo esc_html(get_theme_mod('hero_subtitle', 'Lietuvos Minecraft serveris su unikalia patirtimi. Prisijunk prie mūsų bendruomenės ir išgyvink nepamirštamų nuotykių!')); ?>
+                    <?php echo esc_html(get_theme_mod('hero_subtitle', 'Čia kiekvienas žaidėjas jaučiasi laukiamas ir vertinamas. Draugiška ir aktyvi atmosfera skatina bendradarbiavimą, o pagalba visada šalia – tiek naujokams, tiek patyrusiems žaidėjams.')); ?>
                 </p>
                 <div class="hero-buttons">
                     <a href="#apply" class="btn btn-primary btn-pixel">
-                        <i class="fas fa-gamepad"></i>
-                        Prisijungti
+                        <svg class="btn-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="6" y="11" width="12" height="8" rx="1"/>
+                            <rect x="8" y="7" width="8" height="4"/>
+                            <circle cx="9" cy="15" r="1"/>
+                            <circle cx="15" cy="15" r="1"/>
+                        </svg>
+                        Pradėti Žaisti
                     </a>
-                    <button class="btn btn-secondary" onclick="copyServerIP()">
-                        <i class="fas fa-copy"></i>
-                        <?php echo esc_html(get_theme_mod('server_ip', 'play.argashub.lt')); ?>
-                    </button>
+                    <a href="<?php echo esc_url(get_theme_mod('social_discord', 'https://discord.gg/argashub')); ?>" class="btn btn-secondary" target="_blank">
+                        <svg class="btn-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Discord Serveris
+                    </a>
                 </div>
                 
                 <!-- Stats -->
                 <div class="hero-stats">
                     <div class="stat-item">
-                        <div class="stat-number" data-count="<?php echo absint(get_theme_mod('stat_players', 1000)); ?>">0</div>
-                        <div class="stat-label">Žaidėjai</div>
+                        <div class="stat-number" data-count="230" data-suffix="+">0</div>
+                        <div class="stat-label">Žaidėjų</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" data-count="<?php echo absint(get_theme_mod('stat_discord', 500)); ?>">0</div>
-                        <div class="stat-label">Discord</div>
+                        <div class="stat-number" data-count="7" data-suffix="+">0</div>
+                        <div class="stat-label">Metų</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" data-count="<?php echo absint(get_theme_mod('stat_years', 3)); ?>">0</div>
-                        <div class="stat-label">Metai</div>
+                        <div class="stat-number" data-count="70" data-suffix="+">0</div>
+                        <div class="stat-label">Video</div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Scroll indicator -->
-        <a href="#about" class="scroll-indicator">
-            <svg width="24" height="40" viewBox="0 0 24 40" fill="currentColor">
-                <path d="M12 0L12 30M12 30L4 22M12 30L20 22" stroke="currentColor" stroke-width="2" fill="none"/>
-            </svg>
-        </a>
+        <!-- Scroll indicator - Minecraft Sword Style -->
+        <div class="scroll-indicator">
+            <span class="scroll-text">Slinkite žemyn</span>
+            <div class="minecraft-sword">
+                <svg width="24" height="48" viewBox="0 0 24 48">
+                    <!-- Blade -->
+                    <rect x="10" y="0" width="4" height="4" fill="hsl(var(--diamond))"/>
+                    <rect x="10" y="4" width="4" height="4" fill="hsl(var(--diamond))"/>
+                    <rect x="10" y="8" width="4" height="4" fill="hsl(var(--emerald))"/>
+                    <rect x="10" y="12" width="4" height="4" fill="hsl(var(--emerald))"/>
+                    <rect x="10" y="16" width="4" height="4" fill="hsl(var(--emerald))"/>
+                    <!-- Guard -->
+                    <rect x="4" y="20" width="4" height="4" fill="hsl(var(--gold))"/>
+                    <rect x="10" y="20" width="4" height="4" fill="hsl(var(--gold))"/>
+                    <rect x="16" y="20" width="4" height="4" fill="hsl(var(--gold))"/>
+                    <!-- Handle -->
+                    <rect x="10" y="24" width="4" height="4" fill="#8B4513"/>
+                    <rect x="10" y="28" width="4" height="4" fill="#654321"/>
+                    <!-- Tip glow -->
+                    <rect x="10" y="0" width="4" height="4" fill="hsl(var(--diamond))" opacity="0.8">
+                        <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/>
+                    </rect>
+                </svg>
+            </div>
+        </div>
     </section>
     
     <!-- About Section -->
@@ -166,6 +196,92 @@ get_header();
                     endforeach;
                 endif;
                 ?>
+            </div>
+        </div>
+    </section>
+    
+    <!-- History Section - Book Style -->
+    <section id="istorija" class="section history-section">
+        <div class="history-background"></div>
+        <div class="stone-texture-overlay"></div>
+        
+        <!-- Floating blocks decoration -->
+        <div class="history-floating-blocks">
+            <div class="history-block" style="left: 15%; top: 10%;"></div>
+            <div class="history-block" style="left: 30%; top: 80%; animation-delay: 0.5s;"></div>
+            <div class="history-block" style="left: 45%; top: 10%; animation-delay: 1s;"></div>
+            <div class="history-block" style="left: 60%; top: 80%; animation-delay: 1.5s;"></div>
+            <div class="history-block" style="left: 75%; top: 10%; animation-delay: 2s;"></div>
+            <div class="history-block" style="left: 90%; top: 80%; animation-delay: 2.5s;"></div>
+        </div>
+        
+        <div class="container">
+            <div class="section-title">
+                <h2>ARGO <span class="text-gold">ISTORIJA</span></h2>
+                <p>Per metus serverio esmė keitėsi daugybę kartų – nuo Hardcore režimo iki rolių žaidimo.</p>
+            </div>
+            
+            <!-- Book Style Content -->
+            <div class="history-book" id="history-book">
+                <div class="book-spine"></div>
+                
+                <div class="book-pages">
+                    <!-- Left Page - Character -->
+                    <div class="book-page book-page-left">
+                        <div class="character-frame" id="character-frame">
+                            <div class="corner-decoration corner-tl"></div>
+                            <div class="corner-decoration corner-tr"></div>
+                            <div class="corner-decoration corner-bl"></div>
+                            <div class="corner-decoration corner-br"></div>
+                            <img src="https://mc-heads.net/body/MHF_Steve/128" alt="Character" id="history-character" class="character-image">
+                        </div>
+                        <div class="year-badge" id="year-badge">
+                            <span>2019</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Page - Content -->
+                    <div class="book-page book-page-right">
+                        <h3 class="history-title" id="history-title">Pradžia</h3>
+                        <p class="history-description" id="history-description">Serverio idėjos gimimas ir pirmieji žingsniai</p>
+                        
+                        <!-- Navigation -->
+                        <div class="history-navigation">
+                            <button class="nav-btn" id="history-prev">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M15 18l-6-6 6-6"/>
+                                </svg>
+                            </button>
+                            
+                            <div class="page-indicators" id="page-indicators">
+                                <!-- Generated by JS -->
+                            </div>
+                            
+                            <button class="nav-btn" id="history-next">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 18l6-6-6-6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress bar -->
+                <div class="history-progress">
+                    <div class="history-progress-fill" id="history-progress-fill"></div>
+                </div>
+            </div>
+            
+            <!-- More Button -->
+            <div class="history-more">
+                <a href="https://argashub.lt/istorija" class="btn btn-gold" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                        <polyline points="15 3 21 3 21 9"/>
+                        <line x1="10" y1="14" x2="21" y2="3"/>
+                    </svg>
+                    Daugiau Istorijos
+                </a>
             </div>
         </div>
     </section>
