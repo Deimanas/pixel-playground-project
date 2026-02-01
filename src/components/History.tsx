@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 
 const historyEvents = [
   {
@@ -71,6 +71,42 @@ const colorClasses: Record<string, { bg: string; border: string; text: string }>
 
 export const History = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+    scrollRef.current.style.cursor = 'grabbing';
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+    if (scrollRef.current) {
+      scrollRef.current.style.cursor = 'grab';
+    }
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  }, [isDragging, startX, scrollLeft]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (isDragging) {
+      setIsDragging(false);
+      if (scrollRef.current) {
+        scrollRef.current.style.cursor = 'grab';
+      }
+    }
+  }, [isDragging]);
 
   return (
     <section className="py-24 relative overflow-hidden" id="istorija">
@@ -120,7 +156,14 @@ export const History = () => {
         {/* Horizontal Timeline */}
         <div className="relative">
           {/* Timeline scroll container */}
-          <div className="overflow-x-auto pb-8 scrollbar-hide">
+          <div 
+            ref={scrollRef}
+            className="overflow-x-auto pb-8 scrollbar-hide cursor-grab select-none"
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+          >
             <div className="flex items-start min-w-max px-8 md:px-16">
               {historyEvents.map((event, index) => {
                 const colors = colorClasses[event.color];
