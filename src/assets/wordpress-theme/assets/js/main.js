@@ -391,9 +391,9 @@
     }
 
     // ================================================
-    // HISTORY BOOK NAVIGATION
+    // HISTORY HORIZONTAL TIMELINE
     // ================================================
-    function initHistoryBook() {
+    function initHistoryTimeline() {
         const historyEvents = [
             {
                 year: "2019",
@@ -453,119 +453,89 @@
             },
         ];
 
-        let activeIndex = 0;
+        const container = document.getElementById('timeline-container');
+        const detailCard = document.getElementById('timeline-detail-card');
+        const detailCardInner = detailCard?.querySelector('.detail-card-inner');
+        const detailYearBadge = document.getElementById('detail-year-badge');
+        const detailTitle = document.getElementById('detail-title');
+        const detailDescription = document.getElementById('detail-description');
         
-        const prevBtn = document.getElementById('history-prev');
-        const nextBtn = document.getElementById('history-next');
-        const indicatorsContainer = document.getElementById('page-indicators');
-        const characterImg = document.getElementById('history-character');
-        const characterFrame = document.getElementById('character-frame');
-        const yearBadge = document.getElementById('year-badge');
-        const historyTitle = document.getElementById('history-title');
-        const historyDescription = document.getElementById('history-description');
-        const progressFill = document.getElementById('history-progress-fill');
-        
-        if (!prevBtn || !nextBtn || !indicatorsContainer) return;
+        if (!container) return;
 
-        // Create page indicators
-        historyEvents.forEach((event, i) => {
-            const indicator = document.createElement('button');
-            indicator.className = 'page-indicator';
-            indicator.setAttribute('data-index', i);
-            indicator.setAttribute('data-color', event.color);
-            if (i === 0) indicator.classList.add('active', 'color-' + event.color);
-            indicatorsContainer.appendChild(indicator);
-            
-            indicator.addEventListener('click', () => {
-                goToPage(i);
+        let activeIndex = 0;
+
+        // Generate timeline items
+        historyEvents.forEach((event, index) => {
+            const item = document.createElement('div');
+            item.className = `timeline-item${index === 0 ? ' active color-' + event.color : ''}`;
+            item.setAttribute('data-index', index);
+            item.setAttribute('data-color', event.color);
+
+            item.innerHTML = `
+                <div class="timeline-year-badge">
+                    <span>${event.year}</span>
+                </div>
+                <div class="timeline-character-frame">
+                    <div class="timeline-character-glow"></div>
+                    <img src="${event.image}" alt="${event.title}">
+                </div>
+                <div class="timeline-line-container">
+                    ${index > 0 ? '<div class="timeline-line-left"></div>' : ''}
+                    ${index < historyEvents.length - 1 ? '<div class="timeline-line-right"></div>' : ''}
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item-content">
+                    <h3 class="timeline-item-title">${event.title}</h3>
+                    <p class="timeline-item-description">${event.description}</p>
+                </div>
+            `;
+
+            item.addEventListener('click', () => {
+                setActiveItem(index);
             });
+
+            container.appendChild(item);
         });
 
-        function updateColors(color) {
-            // Update character frame
-            characterFrame.className = 'character-frame color-' + color;
-            
-            // Update year badge
-            yearBadge.className = 'year-badge color-' + color;
-            
-            // Update title
-            historyTitle.className = 'history-title color-' + color;
-            
-            // Update progress bar
-            progressFill.className = 'history-progress-fill color-' + color;
-            
-            // Update indicators
-            document.querySelectorAll('.page-indicator').forEach((ind, i) => {
-                ind.classList.remove('active', 'color-emerald', 'color-gold', 'color-diamond', 'color-redstone');
-                if (i === activeIndex) {
-                    ind.classList.add('active', 'color-' + historyEvents[i].color);
+        function setActiveItem(index) {
+            activeIndex = index;
+            const event = historyEvents[index];
+
+            // Update timeline items
+            document.querySelectorAll('.timeline-item').forEach((item, i) => {
+                item.classList.remove('active', 'color-emerald', 'color-gold', 'color-diamond', 'color-redstone');
+                if (i === index) {
+                    item.classList.add('active', 'color-' + event.color);
                 }
             });
+
+            // Update detail card with animation
+            if (detailCardInner && detailYearBadge && detailTitle && detailDescription) {
+                detailCardInner.style.opacity = '0';
+                detailCardInner.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    // Update colors
+                    detailCardInner.className = 'detail-card-inner color-' + event.color;
+                    detailYearBadge.className = 'detail-year-badge color-' + event.color;
+                    detailYearBadge.textContent = event.year;
+                    detailTitle.className = 'detail-title color-' + event.color;
+                    detailTitle.textContent = event.title;
+                    detailDescription.textContent = event.description;
+
+                    detailCardInner.style.opacity = '1';
+                    detailCardInner.style.transform = 'translateY(0)';
+                }, 150);
+            }
         }
 
-        function goToPage(index) {
-            activeIndex = index;
-            const event = historyEvents[activeIndex];
-            
-            // Update character with fade effect
-            characterImg.style.opacity = '0';
-            characterImg.style.transform = 'rotateY(-90deg)';
-            
-            setTimeout(() => {
-                characterImg.src = event.image;
-                characterImg.style.opacity = '1';
-                characterImg.style.transform = 'rotateY(0)';
-            }, 200);
-            
-            // Update year
-            yearBadge.querySelector('span').textContent = event.year;
-            
-            // Update content with slide effect
-            historyTitle.style.opacity = '0';
-            historyTitle.style.transform = 'translateX(30px)';
-            historyDescription.style.opacity = '0';
-            historyDescription.style.transform = 'translateX(30px)';
-            
-            setTimeout(() => {
-                historyTitle.textContent = event.title;
-                historyDescription.textContent = event.description;
-                historyTitle.style.opacity = '1';
-                historyTitle.style.transform = 'translateX(0)';
-                historyDescription.style.opacity = '1';
-                historyDescription.style.transform = 'translateX(0)';
-            }, 200);
-            
-            // Update progress bar
-            const progress = ((activeIndex + 1) / historyEvents.length) * 100;
-            progressFill.style.width = progress + '%';
-            
-            // Update colors
-            updateColors(event.color);
+        // Add transition to detail card
+        if (detailCardInner) {
+            detailCardInner.style.transition = 'opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease';
         }
 
-        prevBtn.addEventListener('click', () => {
-            const newIndex = activeIndex === 0 ? historyEvents.length - 1 : activeIndex - 1;
-            goToPage(newIndex);
-        });
-
-        nextBtn.addEventListener('click', () => {
-            const newIndex = activeIndex === historyEvents.length - 1 ? 0 : activeIndex + 1;
-            goToPage(newIndex);
-        });
-
-        // Add transition styles
-        if (characterImg) {
-            characterImg.style.transition = 'opacity 0.2s ease, transform 0.4s ease';
-        }
-        if (historyTitle) {
-            historyTitle.style.transition = 'opacity 0.2s ease, transform 0.4s ease, color 0.3s ease';
-        }
-        if (historyDescription) {
-            historyDescription.style.transition = 'opacity 0.2s ease, transform 0.4s ease';
-        }
-
-        // Initialize first page
-        goToPage(0);
+        // Initialize first item
+        setActiveItem(0);
     }
 
     // ================================================
@@ -581,7 +551,11 @@
         initFormProgress();
         initFormSubmission();
         initParticles();
-        initHistoryBook();
+        initHistoryTimeline();
+        
+        // Update active nav on scroll
+        window.addEventListener('scroll', updateActiveNav);
+    });
         
         // Update active nav on scroll
         window.addEventListener('scroll', updateActiveNav);
