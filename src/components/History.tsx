@@ -256,12 +256,44 @@ export const History = () => {
           </p>
         </motion.div>
 
-        {/* Horizontal Timeline */}
+        {/* Horizontal Timeline with Navigation Arrows */}
         <div className="relative">
+          {/* Left Navigation Arrow */}
+          <motion.button
+            onClick={() => navigateToEvent(activeIndex - 1)}
+            disabled={activeIndex === 0}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 minecraft-block transition-all duration-300 ${
+              activeIndex === 0 
+                ? 'bg-muted/50 cursor-not-allowed opacity-50' 
+                : 'bg-gold hover:bg-gold/80 cursor-pointer'
+            }`}
+            whileHover={activeIndex !== 0 ? { scale: 1.1, x: -2 } : {}}
+            whileTap={activeIndex !== 0 ? { scale: 0.95 } : {}}
+            aria-label="Ankstesnis įvykis"
+          >
+            <ChevronLeft className={`w-6 h-6 ${activeIndex === 0 ? 'text-muted-foreground' : 'text-white'}`} />
+          </motion.button>
+
+          {/* Right Navigation Arrow */}
+          <motion.button
+            onClick={() => navigateToEvent(activeIndex + 1)}
+            disabled={activeIndex === historyEvents.length - 1}
+            className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 minecraft-block transition-all duration-300 ${
+              activeIndex === historyEvents.length - 1 
+                ? 'bg-muted/50 cursor-not-allowed opacity-50' 
+                : 'bg-gold hover:bg-gold/80 cursor-pointer'
+            }`}
+            whileHover={activeIndex !== historyEvents.length - 1 ? { scale: 1.1, x: 2 } : {}}
+            whileTap={activeIndex !== historyEvents.length - 1 ? { scale: 0.95 } : {}}
+            aria-label="Kitas įvykis"
+          >
+            <ChevronRight className={`w-6 h-6 ${activeIndex === historyEvents.length - 1 ? 'text-muted-foreground' : 'text-white'}`} />
+          </motion.button>
+
           {/* Timeline scroll container */}
           <div 
             ref={scrollRef}
-            className="overflow-x-auto pb-8 scrollbar-hide cursor-grab select-none touch-pan-x"
+            className="overflow-x-auto pb-8 scrollbar-hide cursor-grab select-none touch-pan-x md:mx-14"
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
