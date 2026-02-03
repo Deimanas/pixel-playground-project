@@ -1,7 +1,7 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 const historyEvents = [
   {
@@ -71,11 +71,65 @@ const colorClasses: Record<string, { bg: string; border: string; text: string }>
 
 export const History = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [isTouchDragging, setIsTouchDragging] = useState(false);
 
+  // Auto-scroll to active item
+  const scrollToItem = useCallback((index: number) => {
+    const item = itemRefs.current[index];
+    if (item && scrollRef.current) {
+      const containerWidth = scrollRef.current.offsetWidth;
+      const itemLeft = item.offsetLeft;
+      const itemWidth = item.offsetWidth;
+      const scrollPosition = itemLeft - (containerWidth / 2) + (itemWidth / 2);
+      
+      scrollRef.current.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, []);
+
+  // Navigate to event with direction tracking
+  const navigateToEvent = useCallback((newIndex: number) => {
+    if (newIndex >= 0 && newIndex < historyEvents.length && newIndex !== activeIndex) {
+      setDirection(newIndex > activeIndex ? 1 : -1);
+      setActiveIndex(newIndex);
+      scrollToItem(newIndex);
+    }
+  }, [activeIndex, scrollToItem]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if section is in view
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+      
+      if (!isInView) return;
+
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        navigateToEvent(Math.min(activeIndex + 1, historyEvents.length - 1));
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        navigateToEvent(Math.max(activeIndex - 1, 0));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeIndex, navigateToEvent]);
+
+  // Mouse drag handlers
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (!scrollRef.current) return;
     setIsDragging(true);
@@ -108,8 +162,57 @@ export const History = () => {
     }
   }, [isDragging]);
 
+  // Touch handlers for mobile swipe
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+    setIsTouchDragging(true);
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isTouchDragging || !scrollRef.current) return;
+    const touchX = e.touches[0].clientX;
+    const diff = touchStartX - touchX;
+    scrollRef.current.scrollLeft += diff * 0.5;
+    setTouchStartX(touchX);
+  }, [isTouchDragging, touchStartX]);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!isTouchDragging) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    
+    // Swipe threshold for navigation
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        navigateToEvent(Math.min(activeIndex + 1, historyEvents.length - 1));
+      } else {
+        navigateToEvent(Math.max(activeIndex - 1, 0));
+      }
+    }
+    setIsTouchDragging(false);
+  }, [isTouchDragging, touchStartX, activeIndex, navigateToEvent]);
+
+  // Animation variants
+  const cardVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 100 : -100,
+      opacity: 0,
+      scale: 0.9,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? 100 : -100,
+      opacity: 0,
+      scale: 0.9,
+    }),
+  };
+
   return (
-    <section className="py-24 relative overflow-hidden" id="istorija">
+    <section ref={sectionRef} className="py-24 relative overflow-hidden" id="istorija" tabIndex={-1}>
       {/* Background */}
       <div className="absolute inset-0 bg-card" />
       <div className="absolute inset-0 stone-texture opacity-20" />
@@ -158,11 +261,14 @@ export const History = () => {
           {/* Timeline scroll container */}
           <div 
             ref={scrollRef}
-            className="overflow-x-auto pb-8 scrollbar-hide cursor-grab select-none"
+            className="overflow-x-auto pb-8 scrollbar-hide cursor-grab select-none touch-pan-x"
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <div className="flex items-start min-w-max px-8 md:px-16">
               {historyEvents.map((event, index) => {
@@ -172,13 +278,14 @@ export const History = () => {
                 return (
                   <motion.div
                     key={index}
+                    ref={(el) => (itemRefs.current[index] = el)}
                     className="relative flex flex-col items-center cursor-pointer group"
                     style={{ minWidth: '160px' }}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    onClick={() => setActiveIndex(index)}
+                    onClick={() => navigateToEvent(index)}
                   >
                     {/* Year badge */}
                     <motion.div
@@ -186,6 +293,8 @@ export const History = () => {
                         isActive ? colors.bg : 'bg-muted'
                       }`}
                       whileHover={{ scale: 1.05 }}
+                      animate={isActive ? { scale: [1, 1.05, 1] } : {}}
+                      transition={isActive ? { duration: 0.3 } : {}}
                     >
                       <span className={`font-pixel text-sm ${isActive ? 'text-white' : 'text-muted-foreground'}`}>
                         {event.year}
@@ -208,49 +317,72 @@ export const History = () => {
                         style={{ imageRendering: 'pixelated' }}
                       />
                       {/* Glow effect for active */}
-                      {isActive && (
-                        <div className={`absolute inset-0 ${colors.bg} opacity-20 blur-sm -z-10`} />
-                      )}
+                      <AnimatePresence>
+                        {isActive && (
+                          <motion.div 
+                            className={`absolute inset-0 ${colors.bg} blur-sm -z-10`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 0.3 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                          />
+                        )}
+                      </AnimatePresence>
                     </motion.div>
 
                     {/* Timeline dot and line */}
                     <div className="relative flex items-center w-full">
                       {/* Left line */}
                       {index > 0 && (
-                        <div className={`absolute right-1/2 h-1 w-full transition-colors duration-300 ${
-                          index <= activeIndex ? colors.bg : 'bg-border'
-                        }`} />
+                        <motion.div 
+                          className={`absolute right-1/2 h-1 w-full ${
+                            index <= activeIndex ? colors.bg : 'bg-border'
+                          }`}
+                          initial={false}
+                          animate={{ 
+                            backgroundColor: index <= activeIndex ? undefined : undefined 
+                          }}
+                          transition={{ duration: 0.3 }}
+                        />
                       )}
                       {/* Right line */}
                       {index < historyEvents.length - 1 && (
-                        <div className={`absolute left-1/2 h-1 w-full transition-colors duration-300 ${
-                          index < activeIndex ? colorClasses[historyEvents[index + 1].color].bg : 'bg-border'
-                        }`} />
+                        <motion.div 
+                          className={`absolute left-1/2 h-1 w-full ${
+                            index < activeIndex ? colorClasses[historyEvents[index + 1].color].bg : 'bg-border'
+                          }`}
+                          initial={false}
+                          transition={{ duration: 0.3 }}
+                        />
                       )}
                       {/* Dot */}
                       <motion.div
-                        className={`relative z-10 mx-auto w-5 h-5 minecraft-block transition-all duration-300 ${
+                        className={`relative z-10 mx-auto w-5 h-5 minecraft-block ${
                           isActive ? colors.bg : 'bg-border'
                         }`}
                         whileHover={{ scale: 1.2 }}
-                        animate={isActive ? { scale: [1, 1.2, 1] } : {}}
-                        transition={isActive ? { duration: 1.5, repeat: Infinity } : {}}
+                        animate={isActive ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+                        transition={isActive ? { duration: 1.5, repeat: Infinity } : { duration: 0.3 }}
                       />
                     </div>
 
                     {/* Title and description below */}
-                    <div className="mt-6 text-center px-2">
+                    <motion.div 
+                      className="mt-6 text-center px-2"
+                      animate={isActive ? { scale: 1.05 } : { scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
                       <h3 className={`font-pixel text-xs md:text-sm mb-2 transition-colors duration-300 ${
                         isActive ? colors.text : 'text-muted-foreground'
                       }`}>
                         {event.title}
                       </h3>
-                      <p className={`font-minecraft text-xs text-muted-foreground transition-opacity duration-300 max-w-[140px] ${
+                      <p className={`font-minecraft text-xs text-muted-foreground max-w-[140px] transition-opacity duration-300 ${
                         isActive ? 'opacity-100' : 'opacity-60'
                       }`}>
                         {event.description}
                       </p>
-                    </div>
+                    </motion.div>
                   </motion.div>
                 );
               })}
@@ -271,28 +403,55 @@ export const History = () => {
           </div>
         </div>
 
-        {/* Active Event Detail Card */}
-        <motion.div
-          key={activeIndex}
-          className="mt-12 max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className={`bg-background border-4 ${colorClasses[historyEvents[activeIndex].color].border} minecraft-block p-6 md:p-8`}>
-            <div className="flex items-center gap-4 mb-4">
-              <div className={`px-4 py-2 ${colorClasses[historyEvents[activeIndex].color].bg} minecraft-block`}>
-                <span className="font-pixel text-lg text-white">{historyEvents[activeIndex].year}</span>
+        {/* Active Event Detail Card with AnimatePresence */}
+        <div className="mt-12 max-w-2xl mx-auto relative overflow-hidden" style={{ minHeight: '180px' }}>
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={activeIndex}
+              custom={direction}
+              variants={cardVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ 
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                duration: 0.3 
+              }}
+              className="w-full"
+            >
+              <div className={`bg-background border-4 ${colorClasses[historyEvents[activeIndex].color].border} minecraft-block p-6 md:p-8`}>
+                <div className="flex items-center gap-4 mb-4">
+                  <motion.div 
+                    className={`px-4 py-2 ${colorClasses[historyEvents[activeIndex].color].bg} minecraft-block`}
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.1, type: "spring" }}
+                  >
+                    <span className="font-pixel text-lg text-white">{historyEvents[activeIndex].year}</span>
+                  </motion.div>
+                  <motion.h3 
+                    className={`font-pixel text-xl md:text-2xl ${colorClasses[historyEvents[activeIndex].color].text}`}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.15 }}
+                  >
+                    {historyEvents[activeIndex].title}
+                  </motion.h3>
+                </div>
+                <motion.p 
+                  className="font-minecraft text-lg text-muted-foreground leading-relaxed"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  {historyEvents[activeIndex].description}
+                </motion.p>
               </div>
-              <h3 className={`font-pixel text-xl md:text-2xl ${colorClasses[historyEvents[activeIndex].color].text}`}>
-                {historyEvents[activeIndex].title}
-              </h3>
-            </div>
-            <p className="font-minecraft text-lg text-muted-foreground leading-relaxed">
-              {historyEvents[activeIndex].description}
-            </p>
-          </div>
-        </motion.div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
         {/* More Button */}
         <motion.div
