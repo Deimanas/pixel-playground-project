@@ -586,9 +586,64 @@ export const ApplicationForm = () => {
 
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-6">
-            {/* Steps Sidebar */}
+            {/* Mobile Steps - Horizontal Scroll */}
             <motion.div 
-              className="lg:w-64 shrink-0"
+              className="lg:hidden"
+              initial={{ opacity: 0, y: -10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <div className="bg-card border-4 border-border minecraft-block p-3 overflow-x-auto">
+                <div className="flex gap-2 min-w-max px-1">
+                  {steps.map((step) => {
+                    const StepIcon = step.icon;
+                    const isActive = currentStep === step.id;
+                    const isCompleted = step.id < currentStep || (step.id === 1 && discordConnected);
+                    const isClickable = step.id === 1 || discordConnected;
+                    
+                    return (
+                      <button
+                        key={step.id}
+                        onClick={() => goToStep(step.id)}
+                        disabled={!isClickable}
+                        className={`flex flex-col items-center gap-1 p-2 min-w-[60px] transition-all minecraft-block border-2 ${
+                          isActive 
+                            ? "bg-emerald/20 border-emerald" 
+                            : isCompleted
+                            ? "bg-gold/10 border-gold/50"
+                            : isClickable
+                            ? "bg-background border-border"
+                            : "bg-muted/30 border-border opacity-50 cursor-not-allowed"
+                        }`}
+                      >
+                        <div className={`w-8 h-8 flex items-center justify-center minecraft-block ${
+                          isActive 
+                            ? "bg-emerald" 
+                            : isCompleted 
+                            ? "bg-gold" 
+                            : "bg-muted"
+                        }`}>
+                          {isCompleted && !isActive ? (
+                            <Check className="w-4 h-4 text-accent-foreground" />
+                          ) : (
+                            <StepIcon className={`w-4 h-4 ${isActive ? "text-white" : "text-muted-foreground"}`} />
+                          )}
+                        </div>
+                        <span className={`font-minecraft text-[10px] text-center leading-tight ${
+                          isActive ? "text-emerald" : "text-foreground"
+                        }`}>
+                          {step.title}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Desktop Steps Sidebar */}
+            <motion.div 
+              className="hidden lg:block lg:w-64 shrink-0"
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
